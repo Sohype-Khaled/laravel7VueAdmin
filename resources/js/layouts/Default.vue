@@ -1,5 +1,5 @@
 <template>
-    <v-app id="sandbox">
+    <v-app>
         <v-navigation-drawer
             v-model="primaryDrawer.model"
             :clipped="primaryDrawer.clipped"
@@ -22,11 +22,16 @@
             <v-btn icon @click.stop="right = !right">
                 <v-icon>settings</v-icon>
             </v-btn>
+
         </v-app-bar>
 
         <v-content>
+            <v-progress-linear
+                v-if="$store.state.loading"
+                class="ma-0"
+                :indeterminate="true"
+            ></v-progress-linear>
             <v-container fluid>
-                <!--                <slot/>-->
             </v-container>
         </v-content>
 
@@ -75,6 +80,7 @@
     export default {
         name: "Default",
         data: () => ({
+            dark: false,
             drawers: ['Default (no property)', 'Permanent', 'Temporary'],
             primaryDrawer: {
                 model: null,
@@ -87,7 +93,7 @@
             ...mapActions('auth', [
                 'logout'
             ])
-        }
+        },
     }
 </script>
 

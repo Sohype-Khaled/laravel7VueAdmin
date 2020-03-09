@@ -1998,11 +1998,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Default",
   data: function data() {
     return {
+      dark: false,
       drawers: ['Default (no property)', 'Permanent', 'Temporary'],
       primaryDrawer: {
         model: null,
@@ -3452,7 +3458,6 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-app",
-    { attrs: { id: "sandbox" } },
     [
       _c("v-navigation-drawer", {
         attrs: {
@@ -3508,7 +3513,20 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("v-content", [_c("v-container", { attrs: { fluid: "" } })], 1),
+      _c(
+        "v-content",
+        [
+          _vm.$store.state.loading
+            ? _c("v-progress-linear", {
+                staticClass: "ma-0",
+                attrs: { indeterminate: true }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _c("v-container", { attrs: { fluid: "" } })
+        ],
+        1
+      ),
       _vm._v(" "),
       _c(
         "v-navigation-drawer",
@@ -60254,8 +60272,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapActions", function() { return mapActions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNamespacedHelpers", function() { return createNamespacedHelpers; });
 /**
- * vuex v3.1.2
- * (c) 2019 Evan You
+ * vuex v3.1.3
+ * (c) 2020 Evan You
  * @license MIT
  */
 function applyMixin (Vue) {
@@ -60647,7 +60665,10 @@ Store.prototype.commit = function commit (_type, _payload, _options) {
       handler(payload);
     });
   });
-  this._subscribers.forEach(function (sub) { return sub(mutation, this$1.state); });
+
+  this._subscribers
+    .slice() // shallow copy to prevent iterator invalidation if subscriber synchronously calls unsubscribe
+    .forEach(function (sub) { return sub(mutation, this$1.state); });
 
   if (
      true &&
@@ -60679,6 +60700,7 @@ Store.prototype.dispatch = function dispatch (_type, _payload) {
 
   try {
     this._actionSubscribers
+      .slice() // shallow copy to prevent iterator invalidation if subscriber synchronously calls unsubscribe
       .filter(function (sub) { return sub.before; })
       .forEach(function (sub) { return sub.before(action, this$1.state); });
   } catch (e) {
@@ -61047,9 +61069,7 @@ function enableStrictMode (store) {
 }
 
 function getNestedState (state, path) {
-  return path.length
-    ? path.reduce(function (state, key) { return state[key]; }, state)
-    : state
+  return path.reduce(function (state, key) { return state[key]; }, state)
 }
 
 function unifyObjectStyle (type, payload, options) {
@@ -61292,7 +61312,7 @@ function getModuleByNamespace (store, helper, namespace) {
 var index_esm = {
   Store: Store,
   install: install,
-  version: '3.1.2',
+  version: '3.1.3',
   mapState: mapState,
   mapMutations: mapMutations,
   mapGetters: mapGetters,
@@ -61365,7 +61385,43 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuetify__WEBPACK_IMPORTED_MODULE_1___default.a);
+var vuetifyOpts = {
+  rtl: false,
+  theme: {
+    // dark: true,
+    themes: {
+      dark: {
+        primary: '#21CFF3',
+        accent: '#FF4081',
+        secondary: '#ffe18d',
+        success: '#4CAF50',
+        info: '#2196F3',
+        warning: '#FB8C00',
+        error: '#FF5252'
+      },
+      light: {
+        primary: '#3f51b5',
+        secondary: '#607d8b',
+        accent: '#009688',
+        error: '#f44336',
+        warning: '#ff5722',
+        info: '#03a9f4',
+        success: '#4caf50'
+      }
+    }
+  }
+};
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuetify__WEBPACK_IMPORTED_MODULE_1___default.a, {
+  theme: {
+    primary: '#3f51b5',
+    secondary: '#607d8b',
+    accent: '#009688',
+    error: '#f44336',
+    warning: '#ff5722',
+    info: '#03a9f4',
+    success: '#4caf50'
+  }
+});
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('default-layout', _js_layouts_Default__WEBPACK_IMPORTED_MODULE_3__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('login-layout', _js_layouts_Login__WEBPACK_IMPORTED_MODULE_4__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.productionTip = false; // Set the base URL of the API
@@ -61380,8 +61436,21 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
   router: _js_routes_js__WEBPACK_IMPORTED_MODULE_2__["default"],
   store: _js_stores_index__WEBPACK_IMPORTED_MODULE_7__["default"],
-  vuetify: new vuetify__WEBPACK_IMPORTED_MODULE_1___default.a()
+  vuetify: new vuetify__WEBPACK_IMPORTED_MODULE_1___default.a(vuetifyOpts)
 });
+/*
+* {
+    theme: {
+        primary: '#3f51b5',
+        secondary: '#607d8b',
+        accent: '#009688',
+        error: '#f44336',
+        warning: '#ff5722',
+        info: '#03a9f4',
+        success: '#4caf50'
+    },
+}
+* */
 
 /***/ }),
 
@@ -61978,6 +62047,24 @@ var ApiService = {
   _401interceptor: null,
   init: function init(baseURL) {
     axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.baseURL = baseURL;
+    axios__WEBPACK_IMPORTED_MODULE_1___default.a.interceptors.request.use(function (config) {
+      // Do something before request is sent
+      _js_stores_index__WEBPACK_IMPORTED_MODULE_3__["default"].commit('toggleLoading');
+      return config;
+    }, function (error) {
+      // Do something with request error
+      return Promise.reject(error);
+    });
+    axios__WEBPACK_IMPORTED_MODULE_1___default.a.interceptors.response.use(function (response) {
+      // Any status code that lie within the range of 2xx cause this function to trigger
+      // Do something with response data
+      _js_stores_index__WEBPACK_IMPORTED_MODULE_3__["default"].commit('toggleLoading');
+      return response;
+    }, function (error) {
+      // Any status codes that falls outside the range of 2xx cause this function to trigger
+      // Do something with response error
+      return Promise.reject(error);
+    });
   },
   setHeader: function setHeader() {
     axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.headers.common["Authorization"] = "Bearer ".concat(_services_storage_service__WEBPACK_IMPORTED_MODULE_2__["TokenService"].getToken());
@@ -62206,7 +62293,7 @@ var UserService = {
                 data: {
                   grant_type: 'password',
                   client_id: 2,
-                  client_secret: '0sKuDAElgJVwLp0W3uUt5q2CFsLXdOpGeBz0QmFi',
+                  client_secret: 'QMsFLLEXbtbnO2eiJlJb5t1hRYwHmDPmJdHps4tV',
                   username: email,
                   password: password,
                   scope: ''
@@ -62555,6 +62642,16 @@ __webpack_require__.r(__webpack_exports__);
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+  state: {
+    loading: false
+  },
+  getters: {},
+  mutations: {
+    toggleLoading: function toggleLoading(state) {
+      state.loading = !state.loading;
+    }
+  },
+  actions: {},
   modules: {
     auth: _js_stores_auth_module__WEBPACK_IMPORTED_MODULE_2__["auth"]
   }
@@ -62580,8 +62677,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/codtail/Documents/projects/laravue/laravel/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/codtail/Documents/projects/laravue/laravel/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/codtailwork/Documents/projects/laravue/laravel7VueAdmin/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/codtailwork/Documents/projects/laravue/laravel7VueAdmin/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
