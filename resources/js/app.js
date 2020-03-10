@@ -4,6 +4,7 @@ import router from '@/js/routes.js';
 
 import Default from '@/js/layouts/Default';
 import Login from '@/js/layouts/Login';
+import App from '@/js/App';
 import ApiService from '@/js/services/api.service';
 import {TokenService} from '@/js/services/storage.service';
 import store from '@/js/stores/index';
@@ -50,6 +51,7 @@ Vue.use(Vuetify, {
 
 Vue.component('default-layout', Default);
 Vue.component('login-layout', Login);
+Vue.component('App', App);
 
 Vue.config.productionTip = false;
 

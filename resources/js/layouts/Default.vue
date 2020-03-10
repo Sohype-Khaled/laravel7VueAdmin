@@ -7,12 +7,32 @@
             :temporary="primaryDrawer.type === 'temporary'"
             app
             overflow
-        />
-
-        <v-app-bar
-            :clipped-left="primaryDrawer.clipped"
-            app
         >
+            <v-list dense nav>
+                <v-list-item>
+                    <v-list-item-content>
+                        <v-list-item-title class="title">
+                            Application
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                            subtext
+                        </v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
+
+                <v-divider></v-divider>
+                <router-link tag="v-list-item" :to="{name: 'admins'}" link>
+                    <v-list-item-icon>
+                        <v-icon>person</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                        <v-list-item-title>Admins</v-list-item-title>
+                    </v-list-item-content>
+                </router-link>
+            </v-list>
+        </v-navigation-drawer>
+        <v-app-bar clipped-left app>
             <v-app-bar-nav-icon
                 v-if="primaryDrawer.type !== 'permanent'"
                 @click.stop="primaryDrawer.model = !primaryDrawer.model"
@@ -32,6 +52,7 @@
                 :indeterminate="true"
             ></v-progress-linear>
             <v-container fluid>
+                <slot></slot>
             </v-container>
         </v-content>
 

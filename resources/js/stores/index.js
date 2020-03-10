@@ -6,19 +6,15 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-      loading: false
+        loading: false,
     },
-    getters: {
-
-    },
+    getters: {},
     mutations: {
         toggleLoading(state) {
             state.loading = !state.loading;
         }
     },
-    actions: {
-
-    },
+    actions: {},
     modules: {
         auth: auth
     }

@@ -14,9 +14,7 @@
 </head>
 <body>
 <div id="app">
-    <component :is="(this.$route.meta.layout || 'default') + '-layout'">
-        <router-view/>
-    </component>
+    <app></app>
 </div>
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}" defer></script>
