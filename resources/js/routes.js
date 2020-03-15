@@ -31,22 +31,22 @@ const router = new Router({
         {
             path: '/',
             name: 'home',
-            component: require('@/js/pages/Home')
+            component: require('@/js/pages/Home').default
         },
         {
             path: '/admins',
             name: 'admins',
-            component: require('@/js/pages/users/listing')
+            component: require('@/js/pages/users/listing').default
         },
         {
             path: '/about',
             name: 'about',
-            component: require('@/js/pages/About')
+            component: require('@/js/pages/About').default
         },
         {
             path: '*',
             name: '404',
-            component: require('@/js/pages/404.vue')
+            component: require('@/js/pages/404.vue').default
         }
     ]
 });

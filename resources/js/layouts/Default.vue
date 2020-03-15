@@ -1,6 +1,7 @@
 <template>
     <v-app>
         <v-navigation-drawer
+            v-if="loggedIn"
             v-model="primaryDrawer.model"
             :clipped="primaryDrawer.clipped"
             :permanent="primaryDrawer.type === 'permanent'"
@@ -32,7 +33,7 @@
                 </router-link>
             </v-list>
         </v-navigation-drawer>
-        <v-app-bar clipped-left app>
+        <v-app-bar v-if="loggedIn" clipped-left app>
             <v-app-bar-nav-icon
                 v-if="primaryDrawer.type !== 'permanent'"
                 @click.stop="primaryDrawer.model = !primaryDrawer.model"
@@ -49,14 +50,14 @@
             <v-progress-linear
                 v-if="$store.state.loading"
                 class="ma-0"
-                :indeterminate="true"
-            ></v-progress-linear>
-            <v-container fluid>
+                :indeterminate="true"/>
+            <v-container :class="!loggedIn?'fill-height': ''" fluid>
                 <slot></slot>
             </v-container>
         </v-content>
 
         <v-navigation-drawer
+            v-if="loggedIn"
             v-model="right"
             app
             clipped
@@ -110,6 +111,14 @@
             },
             right: false
         }),
+        computed: {
+            ...mapGetters('auth', [
+                'loggedIn'
+            ]),
+            isLoggedIn() {
+                return this.loggedIn();
+            }
+        },
         methods: {
             ...mapActions('auth', [
                 'logout'

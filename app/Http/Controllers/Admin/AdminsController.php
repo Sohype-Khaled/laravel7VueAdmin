@@ -10,9 +10,11 @@ use Illuminate\Http\Request;
 class AdminsController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        return AdminResource::collection(User::paginate(10));
+        $admins = new User;
+        $per_page = $request->input('per_page')?? 10;
+        return AdminResource::collection(User::paginate($per_page));
     }
 
     /**

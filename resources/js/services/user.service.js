@@ -24,7 +24,7 @@ const UserService = {
             data: {
                 grant_type: 'password',
                 client_id: 2,
-                client_secret: 'QMsFLLEXbtbnO2eiJlJb5t1hRYwHmDPmJdHps4tV',
+                client_secret: '0sKuDAElgJVwLp0W3uUt5q2CFsLXdOpGeBz0QmFi',
                 username: email,
                 password: password,
                 scope: ''
