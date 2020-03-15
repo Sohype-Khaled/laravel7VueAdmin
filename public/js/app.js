@@ -2414,6 +2414,37 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2421,8 +2452,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       loading: false,
-      options: {},
-      selected: []
+      options: {
+        search: ''
+      },
+      selected: [],
+      mainToolBar: true,
+      bulkActions: false,
+      filtersForm: {
+        active: false,
+        search: ''
+      },
+      footerProps: {
+        itemsPerPageOptions: [5, 10, 15]
+      }
     };
   },
   components: {
@@ -2434,10 +2476,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.getListing(value);
       },
       deep: true
+    },
+    selected: function selected(val) {
+      if (val.length > 0) {
+        this.bulkActions = true;
+        this.mainToolBar = false;
+        this.filtersForm.active = false;
+      } else {
+        this.mainToolBar = true;
+        this.bulkActions = false;
+        this.filtersForm.active = false;
+      }
     }
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])('admins', ['listing'])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('admins', ['fetchAdminsList']), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])('admins', ['fetchAdminsList', 'deleteAdmin']), {
+    submitFilters: function submitFilters() {
+      this.options.search = this.filtersForm.search;
+    },
     getListing: function getListing(filters) {
       var _this = this;
 
@@ -2446,8 +2502,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this.loading = false;
       });
     },
-    deleteAdmin: function deleteAdmin(admin) {
-      console.log('delete Admin', admin);
+    toggleMainToolbar: function toggleMainToolbar() {
+      this.mainToolBar = !this.mainToolBar;
+    },
+    toggleFilters: function toggleFilters() {
+      this.toggleMainToolbar();
+      this.filtersForm.active = !this.filtersForm.active;
+    },
+    handleDeleteAdmin: function handleDeleteAdmin(admin) {
+      var _this2 = this;
+
+      this.loading = true;
+      this.deleteAdmin(admin.id).then(function (res) {
+        _this2.loading = false; // alert here
+
+        _this2.getListing(_this2.options);
+      });
     }
   }),
   created: function created() {
@@ -4020,13 +4090,6 @@ var render = function() {
       _c(
         "v-content",
         [
-          _vm.$store.state.loading
-            ? _c("v-progress-linear", {
-                staticClass: "ma-0",
-                attrs: { indeterminate: true }
-              })
-            : _vm._e(),
-          _vm._v(" "),
           _c(
             "v-container",
             { class: !_vm.loggedIn ? "fill-height" : "", attrs: { fluid: "" } },
@@ -4512,7 +4575,8 @@ var render = function() {
               "server-items-length": _vm.listing.totalItems,
               options: _vm.options,
               "multi-sort": "",
-              "show-select": ""
+              "show-select": "",
+              "footer-props": _vm.footerProps
             },
             on: {
               "update:options": [
@@ -4523,6 +4587,119 @@ var render = function() {
               ]
             },
             scopedSlots: _vm._u([
+              {
+                key: "top",
+                fn: function() {
+                  return [
+                    _c(
+                      "v-toolbar",
+                      { attrs: { flat: "" } },
+                      [
+                        _c("v-toolbar-title", [_vm._v("Admins")]),
+                        _vm._v(" "),
+                        _c("v-spacer"),
+                        _vm._v(" "),
+                        _vm.mainToolBar
+                          ? [
+                              _c(
+                                "v-btn",
+                                {
+                                  staticClass: "ma-1",
+                                  attrs: { icon: "" },
+                                  on: { click: _vm.toggleFilters }
+                                },
+                                [
+                                  _c("v-icon", { attrs: { dark: "" } }, [
+                                    _vm._v("filter_list")
+                                  ])
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-btn",
+                                { staticClass: "ma-1", attrs: { icon: "" } },
+                                [
+                                  _c("v-icon", { attrs: { dark: "" } }, [
+                                    _vm._v("mdi-plus")
+                                  ])
+                                ],
+                                1
+                              )
+                            ]
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.bulkActions
+                          ? [
+                              _c(
+                                "v-btn",
+                                { staticClass: "ma-1", attrs: { icon: "" } },
+                                [
+                                  _c("v-icon", { attrs: { dark: "" } }, [
+                                    _vm._v("mdi-delete")
+                                  ])
+                                ],
+                                1
+                              )
+                            ]
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.filtersForm.active
+                          ? [
+                              _c(
+                                "v-form",
+                                {
+                                  staticClass: "ml-auto",
+                                  on: {
+                                    submit: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.submitFilters($event)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      dense: "",
+                                      "append-icon": "search",
+                                      label: "Search",
+                                      "single-line": ""
+                                    },
+                                    model: {
+                                      value: _vm.filtersForm.search,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.filtersForm, "search", $$v)
+                                      },
+                                      expression: "filtersForm.search"
+                                    }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-btn",
+                                {
+                                  staticClass: "ma-1",
+                                  attrs: { icon: "" },
+                                  on: { click: _vm.toggleFilters }
+                                },
+                                [
+                                  _c("v-icon", { attrs: { dark: "" } }, [
+                                    _vm._v("cancel")
+                                  ])
+                                ],
+                                1
+                              )
+                            ]
+                          : _vm._e()
+                      ],
+                      2
+                    )
+                  ]
+                },
+                proxy: true
+              },
               {
                 key: "item.actions",
                 fn: function(ref) {
@@ -4540,7 +4717,7 @@ var render = function() {
                         attrs: { small: "" },
                         on: {
                           click: function($event) {
-                            return _vm.deleteAdmin(item)
+                            return _vm.handleDeleteAdmin(item)
                           }
                         }
                       },
@@ -20777,7 +20954,7 @@ var defaultMenuProps = __assign({}, _VSelect_VSelect__WEBPACK_IMPORTED_MODULE_1_
 
       this.$nextTick(function () {
         if (!_this.multiple || !_this.internalSearch || !_this.isMenuActive) {
-          _this.internalSearch = !_this.selectedItems.length || _this.multiple || _this.hasSlot ? null : _this.getText(_this.selectedItem);
+          _this.internalSearch = !_this.selectedItems.length || _this.multiple || _this.hasSlot ? _this.internalSearch || null : _this.getText(_this.selectedItem);
         }
       });
     },
@@ -25671,8 +25848,7 @@ var __assign = undefined && undefined.__assign || function () {
       var render = _mixins_loadable__WEBPACK_IMPORTED_MODULE_2__["default"].options.methods.genProgress.call(this);
       if (!render) return null;
       return this.$createElement('div', {
-        staticClass: 'v-card__progress',
-        key: 'progress'
+        staticClass: 'v-card__progress'
       }, [render]);
     }
   },
@@ -26755,8 +26931,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _VColorPickerSwatches__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./VColorPickerSwatches */ "./src/components/VColorPicker/VColorPickerSwatches.ts");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./util */ "./src/components/VColorPicker/util/index.ts");
 /* harmony import */ var _util_mixins__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../util/mixins */ "./src/util/mixins.ts");
-/* harmony import */ var _util_helpers__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../util/helpers */ "./src/util/helpers.ts");
-/* harmony import */ var _mixins_themeable__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../mixins/themeable */ "./src/mixins/themeable/index.ts");
+/* harmony import */ var _mixins_themeable__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../mixins/themeable */ "./src/mixins/themeable/index.ts");
 var __assign = undefined && undefined.__assign || function () {
   __assign = Object.assign || function (t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -26785,8 +26960,7 @@ var __assign = undefined && undefined.__assign || function () {
 
 
 
-
-/* harmony default export */ __webpack_exports__["default"] = (Object(_util_mixins__WEBPACK_IMPORTED_MODULE_7__["default"])(_mixins_themeable__WEBPACK_IMPORTED_MODULE_9__["default"]).extend({
+/* harmony default export */ __webpack_exports__["default"] = (Object(_util_mixins__WEBPACK_IMPORTED_MODULE_7__["default"])(_mixins_themeable__WEBPACK_IMPORTED_MODULE_8__["default"]).extend({
   name: 'v-color-picker',
   props: {
     canvasHeight: {
@@ -26835,8 +27009,7 @@ var __assign = undefined && undefined.__assign || function () {
   },
   computed: {
     hideAlpha: function hideAlpha() {
-      if (!this.value) return false;
-      return !Object(_util__WEBPACK_IMPORTED_MODULE_6__["hasAlpha"])(this.value);
+      return this.value && !Object(_util__WEBPACK_IMPORTED_MODULE_6__["hasAlpha"])(this.value);
     }
   },
   watch: {
@@ -26852,7 +27025,7 @@ var __assign = undefined && undefined.__assign || function () {
       this.internalValue = color;
       var value = Object(_util__WEBPACK_IMPORTED_MODULE_6__["extractColor"])(this.internalValue, this.value);
 
-      if (!Object(_util_helpers__WEBPACK_IMPORTED_MODULE_8__["deepEqual"])(value, this.value)) {
+      if (value !== this.value) {
         this.$emit('input', value);
         this.$emit('update:color', this.internalValue);
       }
@@ -27409,7 +27582,7 @@ var __assign = undefined && undefined.__assign || function () {
           max: 1
         },
         style: {
-          backgroundImage: this.disabled ? undefined : "linear-gradient(to " + (this.$vuetify.rtl ? 'left' : 'right') + ", transparent, " + Object(_util_colorUtils__WEBPACK_IMPORTED_MODULE_2__["RGBtoCSS"])(this.color.rgba) + ")"
+          backgroundImage: !this.disabled ? "linear-gradient(to right, transparent, " + Object(_util_colorUtils__WEBPACK_IMPORTED_MODULE_2__["RGBtoCSS"])(this.color.rgba) + ")" : undefined
         },
         on: {
           input: function input(val) {
@@ -27650,19 +27823,6 @@ var __assign = undefined && undefined.__assign || function () {
   };
 
   return __assign.apply(this, arguments);
-};
-
-var __rest = undefined && undefined.__rest || function (s, e) {
-  var t = {};
-
-  for (var p in s) {
-    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-  }
-
-  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
-  }
-  return t;
 }; // Utilities
 
 
@@ -27774,18 +27934,6 @@ function parseColor(color, oldColor) {
     a: 1
   });
 }
-
-function stripAlpha(color, stripAlpha) {
-  if (stripAlpha) {
-    var a = color.a,
-        rest = __rest(color, ["a"]);
-
-    return rest;
-  }
-
-  return color;
-}
-
 function extractColor(color, input) {
   if (input == null) return color;
 
@@ -27794,7 +27942,7 @@ function extractColor(color, input) {
   }
 
   if (_typeof(input) === 'object') {
-    if (has(input, ['r', 'g', 'b'])) return stripAlpha(color.rgba, !input.a);else if (has(input, ['h', 's', 'l'])) return stripAlpha(color.hsla, !input.a);else if (has(input, ['h', 's', 'v'])) return stripAlpha(color.hsva, !input.a);
+    if (has(input, ['r', 'g', 'b'])) return color.rgba;else if (has(input, ['h', 's', 'l'])) return color.hsla;else if (has(input, ['h', 's', 'v'])) return color.hsva;
   }
 
   return color;
@@ -27807,7 +27955,7 @@ function hasAlpha(color) {
   }
 
   if (_typeof(color) === 'object') {
-    return has(color, ['a']) || has(color, ['alpha']);
+    return has(color, ['a']);
   }
 
   return false;
@@ -28380,7 +28528,7 @@ var __assign = undefined && undefined.__assign || function () {
       return this.serverItemsLength >= 0 ? this.serverItemsLength : this.filteredItems.length;
     },
     pageCount: function pageCount() {
-      return this.internalOptions.itemsPerPage <= 0 ? 1 : Math.ceil(this.itemsLength / this.internalOptions.itemsPerPage);
+      return this.internalOptions.itemsPerPage === -1 ? 1 : Math.ceil(this.itemsLength / this.internalOptions.itemsPerPage); // TODO: can't use items.length here
     },
     pageStart: function pageStart() {
       if (this.internalOptions.itemsPerPage === -1 || !this.items.length) return 0;
@@ -28760,7 +28908,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
   },
   computed: {
     disableNextPageIcon: function disableNextPageIcon() {
-      return this.options.itemsPerPage <= 0 || this.options.page * this.options.itemsPerPage >= this.pagination.itemsLength || this.pagination.pageStop < 0;
+      return this.options.itemsPerPage < 0 || this.options.page * this.options.itemsPerPage >= this.pagination.itemsLength || this.pagination.pageStop < 0;
     },
     computedDataItemsPerPageOptions: function computedDataItemsPerPageOptions() {
       var _this = this;
@@ -28835,7 +28983,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     genPaginationInfo: function genPaginationInfo() {
       var children = ['–'];
 
-      if (this.pagination.itemsLength && this.pagination.itemsPerPage) {
+      if (this.pagination.itemsLength) {
         var itemsLength = this.pagination.itemsLength;
         var pageStart = this.pagination.pageStart + 1;
         var pageStop = itemsLength < this.pagination.pageStop || this.pagination.pageStop < 0 ? itemsLength : this.pagination.pageStop;
@@ -33293,16 +33441,14 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_10__["default"])(_
           name: 'show',
           value: this.isActive
         }],
-        style: {
-          transformOrigin: this.origin
-        }
+        style: {}
       };
 
       if (!this.fullscreen) {
-        data.style = __assign({}, data.style, {
+        data.style = {
           maxWidth: this.maxWidth === 'none' ? undefined : Object(_util_helpers__WEBPACK_IMPORTED_MODULE_12__["convertToUnit"])(this.maxWidth),
           width: this.width === 'auto' ? undefined : Object(_util_helpers__WEBPACK_IMPORTED_MODULE_12__["convertToUnit"])(this.width)
-        });
+        };
       }
 
       return this.$createElement('div', data, this.getContentSlot());
@@ -51517,7 +51663,7 @@ function () {
 
   Vuetify.install = _install__WEBPACK_IMPORTED_MODULE_0__["install"];
   Vuetify.installed = false;
-  Vuetify.version = "2.2.17";
+  Vuetify.version = "2.2.15";
   return Vuetify;
 }();
 
@@ -62906,6 +63052,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       }, _callee);
     }))();
+  },
+  deleteAdmin: function deleteAdmin(admin) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return _js_services_api_service__WEBPACK_IMPORTED_MODULE_1__["default"]["delete"]('/api/v1/admin/admins/' + admin);
+
+            case 2:
+              return _context2.abrupt("return", _context2.sent);
+
+            case 3:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }))();
   }
 });
 
@@ -63380,6 +63546,10 @@ var admins = {
         value: 'email',
         sortable: true
       }, {
+        text: 'Created At',
+        value: 'created_at',
+        sortable: true
+      }, {
         text: 'actions',
         value: 'actions',
         sortable: false
@@ -63420,6 +63590,8 @@ var admins = {
 
                     query += sort;
                   }
+
+                  if (filters.search.length > 0) query += '&search=' + filters.search;
                 } else query = "page=1&per_page=10";
 
                 _context.next = 3;
@@ -63436,6 +63608,10 @@ var admins = {
           }
         }, _callee);
       }))();
+    },
+    deleteAdmin: function deleteAdmin(_ref2, item) {
+      var commit = _ref2.commit;
+      return _js_services_admins_service__WEBPACK_IMPORTED_MODULE_1__["default"].deleteAdmin(item);
     }
   },
   mutations: {
@@ -63687,8 +63863,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/codtail/Documents/projects/laravue/laravel/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/codtail/Documents/projects/laravue/laravel/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/codtailwork/Documents/projects/laravue/laravel7VueAdmin/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/codtailwork/Documents/projects/laravue/laravel7VueAdmin/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

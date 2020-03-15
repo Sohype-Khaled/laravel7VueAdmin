@@ -47,10 +47,10 @@
         </v-app-bar>
 
         <v-content>
-            <v-progress-linear
+           <!-- <v-progress-linear
                 v-if="$store.state.loading"
                 class="ma-0"
-                :indeterminate="true"/>
+                :indeterminate="true"/>-->
             <v-container :class="!loggedIn?'fill-height': ''" fluid>
                 <slot></slot>
             </v-container>

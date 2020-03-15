@@ -13,52 +13,45 @@ class AdminsController extends Controller
     public function index(Request $request)
     {
         $admins = new User;
-        $per_page = $request->input('per_page')?? 10;
-        return AdminResource::collection(User::paginate($per_page));
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $admins = $admins->where('id', 'LIKE', "%$search%")
+                ->orWhere('name', 'LIKE', "%$search%")
+                ->orWhere('email', 'LIKE', "%$search%");
+        }
+        if ($request->has('sort')) {
+            foreach ($request->input('sort') as $sortable) {
+                $order = strpos($sortable, '-') === 0 ? 'desc' : 'asc';
+                $prop = str_replace('-', '', $sortable);
+                $admins = $admins->orderBy($prop, $order);
+            }
+        }
+        $admins = $admins->paginate($request->input('per_page') ?? 10);
+        return AdminResource::collection($admins);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+
+    public function destroy(User $admin)
     {
-        //
+        $deleted = $admin->delete();
+        return response()->json(['msg' => 'User deleted successfully'], 200);
     }
 }

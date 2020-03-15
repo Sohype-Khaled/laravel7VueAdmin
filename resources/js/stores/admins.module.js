@@ -8,6 +8,7 @@ export const admins = {
                 {text: 'id', value: 'id', sortable: true},
                 {text: 'name', value: 'name', sortable: true},
                 {text: 'email', value: 'email', sortable: true},
+                {text: 'Created At', value: 'created_at', sortable: true},
                 {text: 'actions', value: 'actions', sortable: false},
             ],
             items: [],
@@ -31,15 +32,20 @@ export const admins = {
                 if (filters.sortBy.length > 0) {
                     let sort = "";
                     for (let i = 0; i < filters.sortBy.length; i++) {
-                        sort += i < filters.sortBy.length ? "&": "";
+                        sort += i < filters.sortBy.length ? "&" : "";
                         sort += "sort[]=" + (filters.sortDesc[i] ? '' : '-') + filters.sortBy[i];
                     }
                     query += sort
                 }
+                if (filters.search.length > 0)
+                    query += '&search=' + filters.search
             } else
-                query =  "page=1&per_page=10";
+                query = "page=1&per_page=10";
             let admins = await AdminService.getAdmins(query);
             commit('saveItemsList', admins.data)
+        },
+        deleteAdmin({commit}, item) {
+            return AdminService.deleteAdmin(item);
         }
     },
     mutations: {
@@ -48,6 +54,6 @@ export const admins = {
             state.datatable.pagination.page = payload.meta['current_page'];
             state.datatable.pagination.rowsPerPage = payload.meta['per_page'];
             state.datatable.totalItems = payload.meta['total'];
-        }
+        },
     }
 };
