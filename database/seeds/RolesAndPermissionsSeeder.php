@@ -31,7 +31,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $superUser = \App\User::create([
             'name' => 'Sohype Khaled',
             'email' => 'sohype.mop@gmail.com',
-            'password' => '123456789',
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             'email_verified_at' => now(),
             'is_super_admin' => 1,
             'account_type' => 'admin',
@@ -44,6 +44,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 $superUser->givePermissionTo($permission->name);
             }
         }
+
 
 
     }

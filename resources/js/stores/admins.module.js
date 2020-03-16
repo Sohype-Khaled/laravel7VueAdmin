@@ -5,11 +5,12 @@ export const admins = {
     state: {
         datatable: {
             headers: [
-                {text: 'id', value: 'id', sortable: true},
-                {text: 'name', value: 'name', sortable: true},
-                {text: 'email', value: 'email', sortable: true},
+                {text: 'Id', value: 'id', sortable: true},
+                {text: 'Name', value: 'name', sortable: true},
+                {text: 'Email', value: 'email', sortable: true},
+                {text: 'Is Active', value: 'is_active', sortable: true},
                 {text: 'Created At', value: 'created_at', sortable: true},
-                {text: 'actions', value: 'actions', sortable: false},
+                {text: 'Actions', value: 'actions', sortable: false},
             ],
             items: [],
             pagination: {

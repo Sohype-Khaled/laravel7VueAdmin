@@ -1,5 +1,5 @@
 import ApiService from '@/js/services/api.service';
-import { TokenService } from '@/js/services/storage.service';
+import {TokenService, PermissionsService} from '@/js/services/storage.service';
 
 class AuthenticationError extends Error {
     constructor(errorCode, message) {
@@ -17,14 +17,14 @@ const UserService = {
      * @returns access_token
      * @throws AuthenticationError
      **/
-    login: async function(email, password) {
+    login: async function (email, password) {
         const requestData = {
             method: 'post',
             url: "/oauth/token",
             data: {
                 grant_type: 'password',
                 client_id: 2,
-                client_secret: '0sKuDAElgJVwLp0W3uUt5q2CFsLXdOpGeBz0QmFi',
+                client_secret: 'yGINSZje7VGLFHCGY38Fc2FNaSsKjsigC1ABTyND',
                 username: email,
                 password: password,
                 scope: ''
@@ -49,7 +49,7 @@ const UserService = {
     /**
      * Refresh the access token.
      **/
-    refreshToken: async function() {
+    refreshToken: async function () {
         const refreshToken = TokenService.getRefreshToken();
 
         const requestData = {
@@ -89,7 +89,7 @@ const UserService = {
         ApiService.unmount401Interceptor();
     },
 
-    sendResetEmail: async function(email) {
+    sendResetEmail: async function (email) {
         const requestData = {
             method: 'post',
             url: "/password/email",
@@ -104,9 +104,13 @@ const UserService = {
         } catch (error) {
             throw new AuthenticationError(error.response.status, error.response.data.detail)
         }
+    },
+
+    getPermissions: async function () {
+        return await ApiService.get('/api/v1/admin/get-perms');
     }
 };
 
 export default UserService
 
-export { UserService, AuthenticationError }
+export {UserService, AuthenticationError}

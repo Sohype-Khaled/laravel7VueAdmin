@@ -9,7 +9,7 @@ class ProfileController extends Controller
 {
     public function __construct()
     {
-
+        $this->middleware('auth:api');
     }
 
     public function profile()
@@ -17,9 +17,9 @@ class ProfileController extends Controller
 
     }
 
-    public function getRolesAndPermissions()
+    public function getRolesAndPermissions(Request $request)
     {
-
+        return $request->user()->getAllPermissions()->pluck('name');
     }
 
     public function updateData()

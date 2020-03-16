@@ -17,7 +17,8 @@ class AdminsController extends Controller
             $search = $request->input('search');
             $admins = $admins->where('id', 'LIKE', "%$search%")
                 ->orWhere('name', 'LIKE', "%$search%")
-                ->orWhere('email', 'LIKE', "%$search%");
+                ->orWhere('email', 'LIKE', "%$search%")
+                ->orWhere('id', 'LIKE', "%$search%");
         }
         if ($request->has('sort')) {
             foreach ($request->input('sort') as $sortable) {

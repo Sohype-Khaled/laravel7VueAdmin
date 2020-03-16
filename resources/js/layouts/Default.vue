@@ -47,10 +47,6 @@
         </v-app-bar>
 
         <v-content>
-           <!-- <v-progress-linear
-                v-if="$store.state.loading"
-                class="ma-0"
-                :indeterminate="true"/>-->
             <v-container :class="!loggedIn?'fill-height': ''" fluid>
                 <slot></slot>
             </v-container>
@@ -89,6 +85,16 @@
                 </v-list-item-content>
             </v-list-item>
         </v-navigation-drawer>
+
+        <v-snackbar
+            v-model="$store.state.snackbar.show"
+            :color="$store.state.snackbar.color"
+            bottom
+            left
+            :timeout="2000"
+        >
+            {{ $store.state.snackbar.message }}
+        </v-snackbar>
 
         <v-footer :inset="true" app>
             <span class="px-4">&copy; {{ new Date().getFullYear() }}</span>

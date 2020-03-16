@@ -7,7 +7,9 @@ const state = {
     accessToken: TokenService.getToken(),
     authenticationErrorCode: 0,
     authenticationError: '',
-    refreshTokenPromise: null  // Holds the promise of the refresh token
+    refreshTokenPromise: null,  // Holds the promise of the refresh token
+
+    permissions: []
 };
 
 const getters = {
@@ -86,6 +88,11 @@ const actions = {
         } catch (e) {
             console.error(e)
         }
+    },
+
+    async fetchPermissions({ commit }) {
+        const permissions = await UserService.getPermissions();
+        commit('setPermissions', permissions.data);
     }
 };
 
@@ -113,6 +120,10 @@ const mutations = {
 
     refreshTokenPromise(state, promise) {
         state.refreshTokenPromise = promise
+    },
+
+    setPermissions(state, permissions) {
+        this.state.permissions = permissions;
     }
 };
 

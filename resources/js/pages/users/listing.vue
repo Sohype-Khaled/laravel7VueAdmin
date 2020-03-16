@@ -34,20 +34,23 @@
                         </template>
 
                         <template v-if="filtersForm.active">
-                            <v-form @submit.prevent="submitFilters" class="ml-auto">
+                            <v-form ref="filter" @submit.prevent="submitFilters" class="ml-auto">
                                 <v-text-field dense v-model="filtersForm.search" append-icon="search" label="Search"
                                               single-line
                                 />
+                                <v-btn icon @click="toggleFilters">
+                                    <v-icon dark>cancel</v-icon>
+                                </v-btn>
                             </v-form>
-                            <v-btn class="ma-1" icon @click="toggleFilters">
-                                <v-icon dark>cancel</v-icon>
-                            </v-btn>
                         </template>
                     </v-toolbar>
                 </template>
                 <template v-slot:item.actions="{ item }">
                     <v-icon small class="mr-2"> mdi-pencil</v-icon>
                     <v-icon small @click="handleDeleteAdmin(item)"> mdi-delete</v-icon>
+                </template>
+                <template v-slot:item.is_active="{ item }">
+                    <v-chip >{{ item.is_active ? 'Active' : 'Inactive'}} {{item.is_active}}</v-chip>
                 </template>
             </v-data-table>
         </v-col>
@@ -122,13 +125,17 @@
             },
             toggleFilters() {
                 this.toggleMainToolbar();
+                if (this.filtersForm.active)
+                    this.$refs.filter.reset();
                 this.filtersForm.active = !this.filtersForm.active;
+                this.options.search = '';
+                this.getListing(this.options);
             },
             handleDeleteAdmin(admin) {
                 this.loading = true;
                 this.deleteAdmin(admin.id).then(res => {
                     this.loading = false;
-                    // alert here
+                    this.$store.commit('fireSnackbar', {message: res.data.msg});
                     this.getListing(this.options);
                 });
             }

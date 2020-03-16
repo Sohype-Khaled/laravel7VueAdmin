@@ -9,6 +9,8 @@ import ApiService from '@/js/services/api.service';
 import {TokenService} from '@/js/services/storage.service';
 import store from '@/js/stores/index';
 
+window._ = require('lodash');
+
 const vuetifyOpts = {
     rtl: false,
     theme: {
