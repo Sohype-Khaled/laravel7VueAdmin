@@ -2458,6 +2458,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -21726,6 +21729,14 @@ var render = function() {
         { attrs: { cols: "12" } },
         [
           _c("v-data-table", {
+            directives: [
+              {
+                name: "can",
+                rawName: "v-can",
+                value: "admins.index",
+                expression: "'admins.index'"
+              }
+            ],
             staticClass: "elevation-1",
             attrs: {
               loading: _vm.loading,
@@ -21819,32 +21830,47 @@ var render = function() {
                                   }
                                 },
                                 [
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      dense: "",
-                                      "append-icon": "search",
-                                      label: "Search",
-                                      "single-line": ""
-                                    },
-                                    model: {
-                                      value: _vm.filtersForm.search,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.filtersForm, "search", $$v)
-                                      },
-                                      expression: "filtersForm.search"
-                                    }
-                                  }),
-                                  _vm._v(" "),
                                   _c(
-                                    "v-btn",
+                                    "v-row",
                                     {
-                                      attrs: { icon: "" },
-                                      on: { click: _vm.toggleFilters }
+                                      attrs: { align: "center", justify: "end" }
                                     },
                                     [
-                                      _c("v-icon", { attrs: { dark: "" } }, [
-                                        _vm._v("cancel")
-                                      ])
+                                      _c("v-text-field", {
+                                        attrs: {
+                                          dense: "",
+                                          "append-icon": "search",
+                                          label: "Search",
+                                          "single-line": ""
+                                        },
+                                        model: {
+                                          value: _vm.filtersForm.search,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.filtersForm,
+                                              "search",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "filtersForm.search"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "v-btn",
+                                        {
+                                          attrs: { icon: "" },
+                                          on: { click: _vm.toggleFilters }
+                                        },
+                                        [
+                                          _c(
+                                            "v-icon",
+                                            { attrs: { dark: "" } },
+                                            [_vm._v("cancel")]
+                                          )
+                                        ],
+                                        1
+                                      )
                                     ],
                                     1
                                   )
@@ -79429,12 +79455,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuetify */ "./node_modules/vuetify/dist/vuetify.js");
 /* harmony import */ var vuetify__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuetify__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _js_routes_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/js/routes.js */ "./resources/js/routes.js");
-/* harmony import */ var _js_layouts_Default__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/js/layouts/Default */ "./resources/js/layouts/Default.vue");
-/* harmony import */ var _js_layouts_Login__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/js/layouts/Login */ "./resources/js/layouts/Login.vue");
-/* harmony import */ var _js_App__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/js/App */ "./resources/js/App.vue");
-/* harmony import */ var _js_services_api_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/js/services/api.service */ "./resources/js/services/api.service.js");
-/* harmony import */ var _js_services_storage_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/js/services/storage.service */ "./resources/js/services/storage.service.js");
-/* harmony import */ var _js_stores_index__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/js/stores/index */ "./resources/js/stores/index.js");
+/* harmony import */ var _js_dirctives__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/js/dirctives */ "./resources/js/dirctives.js");
+/* harmony import */ var _js_layouts_Default__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/js/layouts/Default */ "./resources/js/layouts/Default.vue");
+/* harmony import */ var _js_layouts_Login__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/js/layouts/Login */ "./resources/js/layouts/Login.vue");
+/* harmony import */ var _js_App__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/js/App */ "./resources/js/App.vue");
+/* harmony import */ var _js_services_api_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/js/services/api.service */ "./resources/js/services/api.service.js");
+/* harmony import */ var _js_services_storage_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/js/services/storage.service */ "./resources/js/services/storage.service.js");
+/* harmony import */ var _js_stores_index__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/js/stores/index */ "./resources/js/stores/index.js");
+
 
 
 
@@ -79482,21 +79510,21 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuetify__WEBPACK_IMPORTED_MODULE_
     success: '#4caf50'
   }
 });
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('default-layout', _js_layouts_Default__WEBPACK_IMPORTED_MODULE_3__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('login-layout', _js_layouts_Login__WEBPACK_IMPORTED_MODULE_4__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('App', _js_App__WEBPACK_IMPORTED_MODULE_5__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('default-layout', _js_layouts_Default__WEBPACK_IMPORTED_MODULE_4__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('login-layout', _js_layouts_Login__WEBPACK_IMPORTED_MODULE_5__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('App', _js_App__WEBPACK_IMPORTED_MODULE_6__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.productionTip = false; // Set the base URL of the API
 
-_js_services_api_service__WEBPACK_IMPORTED_MODULE_6__["default"].init('/'); // If token exists set header
+_js_services_api_service__WEBPACK_IMPORTED_MODULE_7__["default"].init('/'); // If token exists set header
 
-if (_js_services_storage_service__WEBPACK_IMPORTED_MODULE_7__["TokenService"].getToken()) {
-  _js_services_api_service__WEBPACK_IMPORTED_MODULE_6__["default"].setHeader();
+if (_js_services_storage_service__WEBPACK_IMPORTED_MODULE_8__["TokenService"].getToken()) {
+  _js_services_api_service__WEBPACK_IMPORTED_MODULE_7__["default"].setHeader();
 }
 
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
   router: _js_routes_js__WEBPACK_IMPORTED_MODULE_2__["default"],
-  store: _js_stores_index__WEBPACK_IMPORTED_MODULE_8__["default"],
+  store: _js_stores_index__WEBPACK_IMPORTED_MODULE_9__["default"],
   vuetify: new vuetify__WEBPACK_IMPORTED_MODULE_1___default.a(vuetifyOpts)
 });
 /*
@@ -79581,6 +79609,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_datatable_vue_vue_type_template_id_b6efa2ae_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/dirctives.js":
+/*!***********************************!*\
+  !*** ./resources/js/dirctives.js ***!
+  \***********************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.directive('can', {
+  bind: function bind(el, binding, vnode) {
+    console.log(vnode.context.$store.state.auth.permissions);
+  },
+  inserted: function inserted(el, binding, vnode) {
+    console.log(vnode.context.$store.state.auth.permissions);
+  }
+});
 
 /***/ }),
 

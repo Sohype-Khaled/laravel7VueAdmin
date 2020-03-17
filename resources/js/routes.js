@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { TokenService } from '@/js/services/storage.service';
+import {TokenService} from '@/js/services/storage.service';
 
 Vue.use(Router);
 
@@ -51,6 +51,7 @@ const router = new Router({
     ]
 });
 
+
 router.beforeEach((to, from, next) => {
     const isPublic = to.matched.some(record => record.meta.public);
     const onlyWhenLoggedOut = to.matched.some(record => record.meta.onlyWhenLoggedOut);
@@ -67,7 +68,6 @@ router.beforeEach((to, from, next) => {
     if (loggedIn && onlyWhenLoggedOut) {
         return next('/')
     }
-
     next();
 });
 

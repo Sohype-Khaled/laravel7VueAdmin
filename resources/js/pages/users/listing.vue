@@ -14,6 +14,7 @@
                 show-select
                 v-model="selected"
                 :footer-props="footerProps"
+                v-can="'admins.index'"
             >
                 <template v-slot:top>
                     <v-toolbar flat>
@@ -35,12 +36,14 @@
 
                         <template v-if="filtersForm.active">
                             <v-form ref="filter" @submit.prevent="submitFilters" class="ml-auto">
-                                <v-text-field dense v-model="filtersForm.search" append-icon="search" label="Search"
-                                              single-line
-                                />
-                                <v-btn icon @click="toggleFilters">
-                                    <v-icon dark>cancel</v-icon>
-                                </v-btn>
+                                <v-row align="center" justify="end">
+                                    <v-text-field dense v-model="filtersForm.search" append-icon="search" label="Search"
+                                                  single-line
+                                    />
+                                    <v-btn icon @click="toggleFilters">
+                                        <v-icon dark>cancel</v-icon>
+                                    </v-btn>
+                                </v-row>
                             </v-form>
                         </template>
                     </v-toolbar>
