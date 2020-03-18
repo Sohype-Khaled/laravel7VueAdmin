@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import store from '@/js/stores/index';
 import {TokenService} from '@/js/services/storage.service';
 
 Vue.use(Router);
@@ -47,6 +48,11 @@ const router = new Router({
             path: '*',
             name: '404',
             component: require('@/js/pages/404.vue').default
+        },
+        {
+            path: '*',
+            name: '403',
+            component: require('@/js/pages/404.vue').default
         }
     ]
 });
@@ -68,6 +74,10 @@ router.beforeEach((to, from, next) => {
     if (loggedIn && onlyWhenLoggedOut) {
         return next('/')
     }
+
+    if (store.getters['acl/getPermissionsLength'] <= 0)
+        store.dispatch('acl/fetchPermissions');
+
     next();
 });
 

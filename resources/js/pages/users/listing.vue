@@ -14,7 +14,7 @@
                 show-select
                 v-model="selected"
                 :footer-props="footerProps"
-                v-can="'admins.index'"
+                v-can="'admins.index'||'admins.lol'"
             >
                 <template v-slot:top>
                     <v-toolbar flat>
@@ -49,11 +49,11 @@
                     </v-toolbar>
                 </template>
                 <template v-slot:item.actions="{ item }">
-                    <v-icon small class="mr-2"> mdi-pencil</v-icon>
-                    <v-icon small @click="handleDeleteAdmin(item)"> mdi-delete</v-icon>
+                    <v-icon small v-can.disable="'admins.edit'" class="mr-2"> mdi-pencil</v-icon>
+                    <v-icon small v-can.disable="'admins.delete'" @click="handleDeleteAdmin(item)"> mdi-delete</v-icon>
                 </template>
                 <template v-slot:item.is_active="{ item }">
-                    <v-chip >{{ item.is_active ? 'Active' : 'Inactive'}} {{item.is_active}}</v-chip>
+                    <v-chip>{{ item.is_active ? 'Active' : 'Inactive'}} {{item.is_active}}</v-chip>
                 </template>
             </v-data-table>
         </v-col>

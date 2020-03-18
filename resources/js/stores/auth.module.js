@@ -8,8 +8,6 @@ const state = {
     authenticationErrorCode: 0,
     authenticationError: '',
     refreshTokenPromise: null,  // Holds the promise of the refresh token
-
-    permissions: []
 };
 
 const getters = {
@@ -89,11 +87,6 @@ const actions = {
             console.error(e)
         }
     },
-
-    async fetchPermissions({ commit }) {
-        const permissions = await UserService.getPermissions();
-        commit('setPermissions', permissions.data);
-    }
 };
 
 const mutations = {
@@ -121,10 +114,6 @@ const mutations = {
     refreshTokenPromise(state, promise) {
         state.refreshTokenPromise = promise
     },
-
-    setPermissions(state, permissions) {
-        this.state.permissions = permissions;
-    }
 };
 
 export const auth = {

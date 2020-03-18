@@ -1,5 +1,5 @@
 import ApiService from '@/js/services/api.service';
-import {TokenService, PermissionsService} from '@/js/services/storage.service';
+import {TokenService} from '@/js/services/storage.service';
 
 class AuthenticationError extends Error {
     constructor(errorCode, message) {
@@ -24,7 +24,7 @@ const UserService = {
             data: {
                 grant_type: 'password',
                 client_id: 2,
-                client_secret: 'yGINSZje7VGLFHCGY38Fc2FNaSsKjsigC1ABTyND',
+                client_secret: 'oYip6cgISRHrCTX0GosmN4VTxmGqCvXROjq5k5VL',
                 username: email,
                 password: password,
                 scope: ''

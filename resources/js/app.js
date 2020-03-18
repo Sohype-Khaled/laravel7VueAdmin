@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import router from '@/js/routes.js';
-import '@/js/dirctives';
+import '@/js/directives';
 
 import Default from '@/js/layouts/Default';
 import Login from '@/js/layouts/Login';

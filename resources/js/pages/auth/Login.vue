@@ -46,15 +46,13 @@
         },
         methods: {
             ...mapActions('auth', [
-                'login', 'fetchPermissions'
+                'login'
             ]),
 
             handleSubmit() {
                 // Perform a simple validation that email and password have been typed in
                 if (this.email !== '' && this.password !== '') {
-                    this.login({email: this.email, password: this.password}).then(res => {
-                        this.fetchPermissions();
-                    });
+                    this.login({email: this.email, password: this.password});
                     this.password = ""
                 }
             }
