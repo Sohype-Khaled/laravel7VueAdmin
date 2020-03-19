@@ -31,6 +31,16 @@
                         <v-list-item-title>Admins</v-list-item-title>
                     </v-list-item-content>
                 </router-link>
+
+                <router-link tag="v-list-item" :to="{name: 'acl'}" link>
+                    <v-list-item-icon>
+                        <v-icon>person</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                        <v-list-item-title>Access Control List</v-list-item-title>
+                    </v-list-item-content>
+                </router-link>
             </v-list>
         </v-navigation-drawer>
         <v-app-bar v-if="loggedIn" clipped-left app>

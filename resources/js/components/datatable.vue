@@ -3,41 +3,54 @@
         <v-data-table
             :loading="loading"
             loading-text="Loading... Please wait"
-            :headers="table.headers"
-            :items="table.items"
-            :server-items-length="table.totalItems"
-            :footer-props.pagination="table.pagination"
-            class="elevation-1"
-
+            :headers="listing.headers"
+            :items="listing.items"
+            :server-items-length="listing.totalItems"
             :options.sync="options"
+            class="elevation-1"
+            multi-sort
+            show-select
+            v-model="selected"
+            :footer-props="footerProps"
         >
             <template v-slot:top>
-                <v-toolbar flat color="white">
-                    <v-dialog v-model="dialog" max-width="500px">
-                        <template v-slot:activator="{ on }">
-                            <v-btn v-model="dialog" v-on="on" small icon>
-                                <v-icon>filter_list</v-icon>
-                            </v-btn>
-                        </template>
-                        <v-card>
-                            <v-card-text>
-                                <v-container>
-                                    <slot name="filters"/>
-                                </v-container>
-                            </v-card-text>
+                <v-toolbar flat>
+                    <v-toolbar-title>Admins</v-toolbar-title>
+                    <v-spacer/>
+                    <template v-if="mainToolBar">
+                        <v-btn class="ma-1" icon @click="toggleFilters">
+                            <v-icon dark>filter_list</v-icon>
+                        </v-btn>
+                        <v-btn class="ma-1" icon>
+                            <v-icon dark>mdi-plus</v-icon>
+                        </v-btn>
+                    </template>
+                    <template v-if="bulkActions">
+                        <v-btn class="ma-1" icon>
+                            <v-icon dark>mdi-delete</v-icon>
+                        </v-btn>
+                    </template>
 
-                            <v-card-actions>
-                                <v-spacer/>
-                                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                                <v-btn color="blue darken-1" text>Save</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
+                    <template v-if="filtersForm.active">
+                        <v-form ref="filter" @submit.prevent="submitFilters" class="ml-auto">
+                            <v-row align="center" justify="end">
+                                <v-text-field dense v-model="filtersForm.search" append-icon="search" label="Search"
+                                              single-line
+                                />
+                                <v-btn icon @click="toggleFilters">
+                                    <v-icon dark>cancel</v-icon>
+                                </v-btn>
+                            </v-row>
+                        </v-form>
+                    </template>
                 </v-toolbar>
             </template>
             <template v-slot:item.actions="{ item }">
-                <v-icon small class="mr-2" @click="console.log('grgrgrgrg')"> mdi-pencil</v-icon>
-                <v-icon small @click="console.log('jere')"> mdi-delete</v-icon>
+                <v-icon small v-can.disable="'admins.update'" class="mr-2"  @click="updateItem(item)"> mdi-pencil</v-icon>
+                <v-icon small v-can.or.disable="'admins.delete'" @click="handleDeleteAdmin(item)"> mdi-delete</v-icon>
+            </template>
+            <template v-slot:item.is_active="{ item }">
+                <v-chip>{{ item.is_active ? 'Active' : 'Inactive'}} {{item.is_active}}</v-chip>
             </template>
         </v-data-table>
     </v-card>
@@ -50,40 +63,9 @@
         props: ['table'],
         data() {
             return {
-                loading: false,
-                dialog: false,
-                options: {},
-                footer: {
 
-                },
             };
         },
-        computed: {
-            pagination: {
-                get() {
-                    return this.table.pagination;
-                },
-                set(value) {
-                    console.log(value)
-                }
-            }
-        },
-        created() {
-            // this.getData();
-        },
-        watch: {
-            options: {
-                handler(val) {
-                    // this.getData(val.page)
-                },
-                deep: true,
-            },
-        },
-        methods: {
-            close() {
-                this.dialog = false;
-            },
-        }
     }
 </script>
 

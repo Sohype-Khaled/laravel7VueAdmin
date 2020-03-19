@@ -17,7 +17,7 @@
             >
                 <template v-slot:top>
                     <v-toolbar flat>
-                        <v-toolbar-title>Admins</v-toolbar-title>
+                        <v-toolbar-title>Roles</v-toolbar-title>
                         <v-spacer/>
                         <template v-if="mainToolBar">
                             <v-btn class="ma-1" icon @click="toggleFilters">
@@ -33,10 +33,10 @@
                             </v-btn>
                         </template>
 
-                        <template v-if="filtersForm.active">
+                        <template v-if="filters.active">
                             <v-form ref="filter" @submit.prevent="submitFilters" class="ml-auto">
                                 <v-row align="center" justify="end">
-                                    <v-text-field dense v-model="filtersForm.search" append-icon="search" label="Search"
+                                    <v-text-field dense v-model="filters.search" append-icon="search" label="Search"
                                                   single-line
                                     />
                                     <v-btn icon @click="toggleFilters">
@@ -51,95 +51,42 @@
                     <v-icon small v-can.disable="'admins.update'" class="mr-2"  @click="updateItem(item)"> mdi-pencil</v-icon>
                     <v-icon small v-can.or.disable="'admins.delete'" @click="handleDeleteAdmin(item)"> mdi-delete</v-icon>
                 </template>
-                <template v-slot:item.is_active="{ item }">
-                    <v-chip>{{ item.is_active ? 'Active' : 'Inactive'}} {{item.is_active}}</v-chip>
-                </template>
             </v-data-table>
         </v-col>
     </v-row>
 </template>
 
 <script>
-    import datatable from "@/js/components/datatable";
-    import {mapGetters, mapActions} from "vuex";
+    import datatable from "@/js/mixins/datatable";
+    import {mapActions, mapGetters} from "vuex";
 
     export default {
-        name: "listing",
-        data() {
-            return {
-                loading: false,
-                options: {
-                    search: ''
-                },
-                selected: [],
-                mainToolBar: true,
-                bulkActions: false,
-                filtersForm: {
-                    active: false,
-                    search: '',
-                },
-                footerProps: {
-                    itemsPerPageOptions: [5, 10, 15]
-                }
-            }
-        },
+        name: "ACL",
+        mixins: [datatable],
         components: {
             datatable
         },
-        watch: {
-            options: {
-                handler(value) {
-                    this.getListing(value)
-                },
-                deep: true,
-            },
-            selected(val) {
-                if (val.length > 0) {
-                    this.bulkActions = true;
-                    this.mainToolBar = false;
-                    this.filtersForm.active = false;
-                } else {
-                    this.mainToolBar = true;
-                    this.bulkActions = false;
-                    this.filtersForm.active = false;
+        data() {
+            return {
+                filters: {
+                    active: false,
+                    search: ''
                 }
             }
         },
         computed: {
-            ...mapGetters('admins', ['listing']),
+            ...mapGetters('roles', ['listing']),
         },
-        methods: {
-            ...mapActions('admins', [
-                'fetchAdminsList', 'deleteAdmin'
+        methods:{
+            ...mapActions('roles', [
+                'fetchItemsList'
             ]),
-            submitFilters() {
-                this.options.search = this.filtersForm.search;
-            },
             getListing(filters) {
                 this.loading = true;
-                this.fetchAdminsList(filters).then(res => {
+                this.fetchItemsList(filters).then(res => {
                     this.loading = false;
-                });
+                }).catch(err=>console.log(err));
             },
-            toggleMainToolbar() {
-                this.mainToolBar = !this.mainToolBar;
-            },
-            toggleFilters() {
-                this.toggleMainToolbar();
-                if (this.filtersForm.active)
-                    this.$refs.filter.reset();
-                this.filtersForm.active = !this.filtersForm.active;
-                this.options.search = '';
-                this.getListing(this.options);
-            },
-            handleDeleteAdmin(admin) {
-                this.loading = true;
-                this.deleteAdmin(admin.id).then(res => {
-                    this.loading = false;
-                    this.$store.commit('fireSnackbar', {message: res.data.msg});
-                    this.getListing(this.options);
-                });
-            }
         },
         created() {
             this.getListing()

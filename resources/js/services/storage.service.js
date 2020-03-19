@@ -33,4 +33,18 @@ const TokenService = {
     }
 };
 
-export { TokenService };
+const PERMISSIONS_KEY = 'permissions';
+
+const ACLService = {
+    getPermissions() {
+        return localStorage.getItem(PERMISSIONS_KEY);
+    },
+    getPermissionsLength(){
+        // console.log(localStorage.getItem(PERMISSIONS_KEY).length > 0 )
+    },
+    savePermissions(permissions) {
+        localStorage.setItem(PERMISSIONS_KEY, permissions)
+    },
+};
+
+export { TokenService, ACLService };

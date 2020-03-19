@@ -1,4 +1,6 @@
 import UserService from "@/js/services/user.service";
+import {ACLService} from "@/js/services/storage.service";
+
 export const acl = {
     namespaced: true,
     state: {
@@ -18,9 +20,11 @@ export const acl = {
         }
     },
     actions: {
-        fetchPermissions({ commit }) {
-            UserService.getPermissions(). then(res => {
-                commit('setPermissions', res.data);
+        fetchPermissions({commit}) {
+            UserService.getPermissions().then(res => {
+                commit('setPermissions', res.data)
+                ACLService.savePermissions(res.data);
+                ACLService.getPermissionsLength();
             });
         }
     }

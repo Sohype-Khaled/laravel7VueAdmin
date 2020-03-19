@@ -40,9 +40,9 @@ const router = new Router({
             component: require('@/js/pages/users/listing').default
         },
         {
-            path: '/about',
-            name: 'about',
-            component: require('@/js/pages/About').default
+            path: '/acl',
+            name: 'acl',
+            component: require('@/js/pages/ACL').default
         },
         {
             path: '*',
