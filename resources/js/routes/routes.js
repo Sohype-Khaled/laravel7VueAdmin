@@ -3,57 +3,34 @@ import Router from 'vue-router';
 import store from '@/js/stores/index';
 import {TokenService} from '@/js/services/storage.service';
 
+import ACLRoutes from "@/js/routes/ACLRoutes";
+import AdminsRoutes from "@/js/routes/AdminsRoutes";
+import AuthRoutes from "@/js/routes/AuthRoutes";
+
 Vue.use(Router);
 
 const router = new Router({
     base: '/admin',
     mode: 'history',
     routes: [
-        {
-            path: '/login',
-            name: 'login',
-            meta: {
-                layout: 'login',
-                public: true,
-                onlyWhenLoggedOut: true
-            },
-            component: require('@/js/pages/auth/Login').default
-        },
-        {
-            path: '/password/reset',
-            name: 'passwordReset',
-            meta: {
-                layout: 'login',
-                public: true,
-                onlyWhenLoggedOut: true
-            },
-            component: require('@/js/pages/auth/ResetPassword').default
-        },
+        ...AuthRoutes,
         {
             path: '/',
             name: 'home',
             component: require('@/js/pages/Home').default
         },
+        ...AdminsRoutes,
+        ...ACLRoutes,
         {
-            path: '/admins',
-            name: 'admins',
-            component: require('@/js/pages/users/listing').default
-        },
-        {
-            path: '/acl',
-            name: 'acl',
-            component: require('@/js/pages/ACL').default
+            path: '/unauthorized',
+            name: '403',
+            component: require('@/js/pages/404.vue').default
         },
         {
             path: '*',
             name: '404',
             component: require('@/js/pages/404.vue').default
         },
-        {
-            path: '*',
-            name: '403',
-            component: require('@/js/pages/404.vue').default
-        }
     ]
 });
 

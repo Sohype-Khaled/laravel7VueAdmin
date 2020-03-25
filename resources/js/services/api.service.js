@@ -5,7 +5,6 @@ import store from '@/js/stores/index';
 const ApiService = {
     _401interceptor: null,
 
-
     init(baseURL) {
         axios.defaults.baseURL = baseURL;
 

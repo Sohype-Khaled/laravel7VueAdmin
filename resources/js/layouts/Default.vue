@@ -1,100 +1,55 @@
 <template>
     <v-app>
-        <v-navigation-drawer
-            v-if="loggedIn"
-            v-model="primaryDrawer.model"
-            :clipped="primaryDrawer.clipped"
-            :permanent="primaryDrawer.type === 'permanent'"
-            :temporary="primaryDrawer.type === 'temporary'"
-            app
-            overflow
-        >
-            <v-list dense nav>
-                <v-list-item>
-                    <v-list-item-content>
-                        <v-list-item-title class="title">
-                            Application
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                            subtext
-                        </v-list-item-subtitle>
-                    </v-list-item-content>
-                </v-list-item>
+        <sidebar :logged-in="loggedIn" :open="sidebar"/>
 
-                <v-divider></v-divider>
-                <router-link tag="v-list-item" :to="{name: 'admins'}" link>
-                    <v-list-item-icon>
-                        <v-icon>person</v-icon>
-                    </v-list-item-icon>
-
-                    <v-list-item-content>
-                        <v-list-item-title>Admins</v-list-item-title>
-                    </v-list-item-content>
-                </router-link>
-
-                <router-link tag="v-list-item" :to="{name: 'acl'}" link>
-                    <v-list-item-icon>
-                        <v-icon>person</v-icon>
-                    </v-list-item-icon>
-
-                    <v-list-item-content>
-                        <v-list-item-title>Access Control List</v-list-item-title>
-                    </v-list-item-content>
-                </router-link>
-            </v-list>
-        </v-navigation-drawer>
-        <v-app-bar v-if="loggedIn" clipped-left app>
-            <v-app-bar-nav-icon
-                v-if="primaryDrawer.type !== 'permanent'"
-                @click.stop="primaryDrawer.model = !primaryDrawer.model"
-            />
-            <v-toolbar-title>Vuetify</v-toolbar-title>
+        <v-app-bar v-if="loggedIn" clipped-left clipped-right app class="primary white--text">
+            <v-app-bar-nav-icon @click.stop="sidebar = !sidebar"/>
+            <v-toolbar-title>Dashboard</v-toolbar-title>
             <v-spacer/>
-            <v-btn icon @click.stop="right = !right">
-                <v-icon>settings</v-icon>
-            </v-btn>
+            <v-menu bottom left close-on-click offset-y>
+                <template v-slot:activator="{ on }">
+                    <v-btn icon v-on="on">
+                        <v-icon>settings</v-icon>
+                    </v-btn>
+                </template>
 
+                <v-list>
+                    <v-list-item>
+                        <v-list-item-icon>
+                            <v-icon>person</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>
+                            Profile Settings
+                        </v-list-item-title>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-icon>
+                            <v-icon>brightness_4</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                            <v-list-item-title>Enable Dark Theme</v-list-item-title>
+                        </v-list-item-content>
+                        <v-list-item-action>
+                            <v-switch v-model="$vuetify.theme.dark"/>
+                        </v-list-item-action>
+                    </v-list-item>
+                    <v-list-item @click.stop="logout">
+                        <v-list-item-icon>
+                            <v-icon>power_settings_new</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                            <v-list-item-title>Logout</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
         </v-app-bar>
 
         <v-content>
-            <v-container :class="!loggedIn?'fill-height': ''" fluid>
-                <slot></slot>
+            <v-container :class="[!loggedIn ? 'fill-height' : '']" fluid>
+                <router-view/>
             </v-container>
         </v-content>
-
-        <v-navigation-drawer
-            v-if="loggedIn"
-            v-model="right"
-            app
-            clipped
-            right
-            temporary
-            overflow>
-            <v-list-item>
-                <v-list-item-icon>
-                    <v-icon>person</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>
-                    Profile Settings
-                </v-list-item-title>
-            </v-list-item>
-            <v-list-item @click.stop="$vuetify.theme.dark =  !$vuetify.theme.dark">
-                <v-list-item-icon>
-                    <v-icon>brightness_4</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                    <v-list-item-title>Enable Dark Theme</v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item @click.stop="logout">
-                <v-list-item-icon>
-                    <v-icon>power_settings_new</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                    <v-list-item-title>Logout</v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-        </v-navigation-drawer>
 
         <v-snackbar
             v-model="$store.state.snackbar.show"
@@ -106,7 +61,7 @@
             {{ $store.state.snackbar.message }}
         </v-snackbar>
 
-        <v-footer :inset="true" app>
+        <v-footer absolute :inset="true" app>
             <span class="px-4">&copy; {{ new Date().getFullYear() }}</span>
         </v-footer>
     </v-app>
@@ -114,31 +69,23 @@
 
 <script>
     import {mapGetters, mapActions} from "vuex";
+    import Sidebar from "@/js/layouts/Sidebar";
 
     export default {
         name: "Default",
+        components: {
+            Sidebar
+        },
         data: () => ({
-            dark: false,
+            sidebar: true,
             drawers: ['Default (no property)', 'Permanent', 'Temporary'],
-            primaryDrawer: {
-                model: null,
-                type: 'default (no property)',
-                clipped: true,
-            },
-            right: false
         }),
         computed: {
-            ...mapGetters('auth', [
-                'loggedIn'
-            ]),
-            isLoggedIn() {
-                return this.loggedIn();
-            }
+            ...mapGetters('auth', ['loggedIn']),
+
         },
         methods: {
-            ...mapActions('auth', [
-                'logout'
-            ])
+            ...mapActions('auth', ['logout'])
         },
     }
 </script>

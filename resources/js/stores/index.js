@@ -4,6 +4,7 @@ import {auth} from '@/js/stores/auth.module';
 import {acl} from '@/js/stores/acl.module';
 import {admins} from '@/js/stores/admins.module';
 import {roles} from '@/js/stores/roles.module';
+import {permissions} from '@/js/stores/permissions.module';
 
 Vue.use(Vuex);
 
@@ -35,5 +36,6 @@ export default new Vuex.Store({
         acl,
         admins,
         roles,
+        permissions
     }
 })

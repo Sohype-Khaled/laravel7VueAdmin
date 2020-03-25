@@ -14,7 +14,7 @@
 </head>
 <body>
 <div id="app">
-    <app></app>
+    <default-layout/>
 </div>
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}" defer></script>

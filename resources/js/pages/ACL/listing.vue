@@ -16,14 +16,14 @@
                 v-can="'admins.index'"
             >
                 <template v-slot:top>
-                    <v-toolbar flat>
+                    <v-toolbar flat class="accent">
                         <v-toolbar-title>Roles</v-toolbar-title>
                         <v-spacer/>
                         <template v-if="mainToolBar">
                             <v-btn class="ma-1" icon @click="toggleFilters">
                                 <v-icon dark>filter_list</v-icon>
                             </v-btn>
-                            <v-btn class="ma-1" icon>
+                            <v-btn class="ma-1" icon :to="{name: 'acl.create'}">
                                 <v-icon dark>mdi-plus</v-icon>
                             </v-btn>
                         </template>
@@ -48,8 +48,12 @@
                     </v-toolbar>
                 </template>
                 <template v-slot:item.actions="{ item }">
-                    <v-icon small v-can.disable="'admins.update'" class="mr-2"  @click="updateItem(item)"> mdi-pencil</v-icon>
-                    <v-icon small v-can.or.disable="'admins.delete'" @click="handleDeleteAdmin(item)"> mdi-delete</v-icon>
+                    <v-btn v-can.disable="'roles.update'" class="ma-1" icon
+                           :to="{name: 'acl.edit', params:{id: item.id}}">
+                        <v-icon small dark>mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-icon small v-can.or.disable="'admins.delete'" @click="handleDeleteAdmin(item)"> mdi-delete
+                    </v-icon>
                 </template>
             </v-data-table>
         </v-col>
@@ -77,7 +81,7 @@
         computed: {
             ...mapGetters('roles', ['listing']),
         },
-        methods:{
+        methods: {
             ...mapActions('roles', [
                 'fetchItemsList'
             ]),
@@ -85,7 +89,7 @@
                 this.loading = true;
                 this.fetchItemsList(filters).then(res => {
                     this.loading = false;
-                }).catch(err=>console.log(err));
+                }).catch(err => console.log(err));
             },
         },
         created() {

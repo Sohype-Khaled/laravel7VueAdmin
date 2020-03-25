@@ -1,6 +1,6 @@
 import { UserService, AuthenticationError } from '@/js/services/user.service';
 import { TokenService } from '@/js/services/storage.service';
-import router from '@/js/routes';
+import router from '@/js/routes/routes';
 
 const state = {
     authenticating: false,

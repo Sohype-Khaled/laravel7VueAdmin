@@ -13,6 +13,7 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         $this->targets = [
             'admins' => collect(['index', 'show', 'store', 'delete', 'update', 'bulkDelete', 'export', 'activate', 'deactivate']),
+            'roles' => collect(['index', 'show', 'store', 'delete', 'update', 'bulkDelete']),
         ];
     }
 

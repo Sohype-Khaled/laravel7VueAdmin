@@ -1,32 +1,33 @@
 <template>
     <v-navigation-drawer
-        v-model="primaryDrawer.model"
+        v-if="loggedIn"
+        v-model="open"
         clipped
-        :permanent="primaryDrawer.type === 'permanent'"
-        :temporary="primaryDrawer.type === 'temporary'"
         app
         overflow
+        class="secondary"
     >
         <v-list dense nav>
             <v-list-item>
                 <v-list-item-content>
-                    <v-list-item-title class="title">
+                    <v-list-item-title class="title white--text">
                         Application
                     </v-list-item-title>
-                    <v-list-item-subtitle>
+                    <v-list-item-subtitle class="white--text">
                         subtext
                     </v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
 
-            <v-divider></v-divider>
-            <router-link tag="v-list-item" :to="{name: 'admins'}" link>
+            <v-divider/>
+            <router-link tag="v-list-item" link v-for="item in list" :key="item.text"
+                         :to="item.to">
                 <v-list-item-icon>
-                    <v-icon>person</v-icon>
+                    <v-icon color="white" v-text="item.icon"/>
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                    <v-list-item-title>Admins</v-list-item-title>
+                    <v-list-item-title class="white--text" v-text="item.text"/>
                 </v-list-item-content>
             </router-link>
         </v-list>
@@ -37,8 +38,24 @@
     export default {
         name: "Sidebar",
         props: [
-            'right',
-        ]
+            'right', 'loggedIn', 'open'
+        ],
+        data() {
+            return {
+                list: [
+                    {
+                        text: 'Admins',
+                        to: {name: 'admins'},
+                        icon: 'person'
+                    },
+                    {
+                        text: 'Access Control List',
+                        to: {name: 'acl'},
+                        icon: 'no_encryption'
+                    },
+                ]
+            }
+        }
     }
 </script>
 

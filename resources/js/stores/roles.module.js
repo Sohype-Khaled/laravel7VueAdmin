@@ -1,5 +1,5 @@
 import RoleService from '@/js/services/roles.service';
-import {tableMutations, tableState, tableActions, tableGetters} from "@/js/stores/datatable";
+import {tableActions, tableGetters, tableMutations, tableState} from "@/js/stores/datatable";
 
 export const roles = {
     namespaced: true,
@@ -26,5 +26,14 @@ export const roles = {
             let items = await RoleService.getRoles(query);
             commit('saveItemsList', items.data)
         },
+        createRole({commit}, payload) {
+            return RoleService.createRole(payload);
+        },
+        getRole(context, id) {
+            return RoleService.getRole(id);
+        },
+        updateRole(context, payload) {
+            return RoleService.updateRole(payload.id, payload.value);
+        }
     }
 };
