@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\UserResource;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
@@ -14,7 +15,7 @@ class ProfileController extends Controller
 
     public function profile()
     {
-
+        return new UserResource(request()->user());
     }
 
     public function getRolesAndPermissions(Request $request)

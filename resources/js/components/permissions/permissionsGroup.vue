@@ -11,7 +11,6 @@
                    :key="name+'-'+item">
                 <v-checkbox class="mt-1"
                             hide-details
-                            ripple
                             :error="hasError"
                             v-model="selected"
                             :label="item"

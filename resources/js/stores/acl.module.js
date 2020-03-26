@@ -4,7 +4,8 @@ import {ACLService} from "@/js/services/storage.service";
 export const acl = {
     namespaced: true,
     state: {
-        permissions: []
+        permissions: [],
+        user: {},
     },
     getters: {
         checkPermission: state => permission => {
@@ -12,20 +13,31 @@ export const acl = {
         },
         getPermissionsLength(state) {
             return state.permissions.length;
+        },
+        getUser(state) {
+            return state.user;
         }
     },
     mutations: {
         setPermissions(state, permissions) {
             state.permissions = permissions;
+        },
+        setUser(state, user) {
+            state.user = user;
         }
     },
     actions: {
         fetchPermissions({commit}) {
             UserService.getPermissions().then(res => {
-                commit('setPermissions', res.data)
+                commit('setPermissions', res.data);
                 ACLService.savePermissions(res.data);
                 ACLService.getPermissionsLength();
             });
+        },
+        fetchUser({commit}) {
+            UserService.getUserData().then(res => {
+                commit('setUser', res.data.data);
+            })
         }
     }
 };

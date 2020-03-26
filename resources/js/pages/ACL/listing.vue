@@ -52,7 +52,7 @@
                            :to="{name: 'acl.edit', params:{id: item.id}}">
                         <v-icon small dark>mdi-pencil</v-icon>
                     </v-btn>
-                    <v-icon small v-can.or.disable="'admins.delete'" @click="handleDeleteAdmin(item)"> mdi-delete
+                    <v-icon small v-can.or.disable="'admins.delete'" @click="handleDelete(item)"> mdi-delete
                     </v-icon>
                 </template>
             </v-data-table>
@@ -63,6 +63,7 @@
 <script>
     import datatable from "@/js/mixins/datatable";
     import {mapActions, mapGetters} from "vuex";
+    import {Dialog} from "@/js/helpers/Messages";
 
     export default {
         name: "ACL",
@@ -91,6 +92,16 @@
                     this.loading = false;
                 }).catch(err => console.log(err));
             },
+            handleDelete(item) {
+                Dialog({
+                    title: 'You are about to delete ' + item.name + ' role!',
+                    message: 'Are you sure?',
+                    onSubmit: function () {
+                        this.loading = true;
+                        console.log(item)
+                    }
+                })
+            }
         },
         created() {
             this.getListing()

@@ -62,6 +62,7 @@
 <script>
     import datatable from "@/js/components/datatable";
     import {mapGetters, mapActions} from "vuex";
+    import {Dialog, Snackbar} from "@/js/helpers/Messages";
 
     export default {
         name: "listing",
@@ -133,13 +134,19 @@
                 this.getListing(this.options);
             },
             handleDeleteAdmin(admin) {
-                this.loading = true;
-                this.deleteAdmin(admin.id).then(res => {
-                    this.loading = false;
-                    this.$store.commit('fireSnackbar', {message: res.data.msg});
-                    this.getListing(this.options);
-                });
-            }
+                Dialog({
+                    title: 'You are about to delete ' + admin.name + ' role!',
+                    message: 'Are you sure?',
+                    onSubmit: () => {
+                        this.loading = true;
+                        this.deleteAdmin(admin.id).then(res => {
+                            this.loading = false;
+                            Snackbar({message: res.data.msg});
+                            this.getListing(this.options);
+                        });
+                    }
+                })
+            },
         },
         created() {
             this.getListing()

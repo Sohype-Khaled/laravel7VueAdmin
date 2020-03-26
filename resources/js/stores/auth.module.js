@@ -78,8 +78,6 @@ const actions = {
     },
 
     async sendResetEmail ({ commit }, email) {
-        // commit('loginRequest');
-
         try {
             const token = await UserService.sendResetEmail(email);
             return true

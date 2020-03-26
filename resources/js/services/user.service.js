@@ -11,12 +11,6 @@ class AuthenticationError extends Error {
 }
 
 const UserService = {
-    /**
-     * Login the user and store the access token to TokenService.
-     *
-     * @returns access_token
-     * @throws AuthenticationError
-     **/
     login: async function (email, password) {
         const requestData = {
             method: 'post',
@@ -39,16 +33,11 @@ const UserService = {
             ApiService.setHeader();
 
             ApiService.mount401Interceptor();
-
             return response.data.access_token;
         } catch (error) {
             throw new AuthenticationError(error.response.status, error.response.data.detail)
         }
     },
-
-    /**
-     * Refresh the access token.
-     **/
     refreshToken: async function () {
         const refreshToken = TokenService.getRefreshToken();
 
@@ -75,20 +64,12 @@ const UserService = {
         }
 
     },
-
-    /**
-     * Logout the current user by removing the token from storage.
-     *
-     * Will also remove `Authorization Bearer <token>` header from future requests.
-     **/
     logout() {
-        // Remove the token and remove Authorization header from Api Service as well
         TokenService.removeToken();
         TokenService.removeRefreshToken();
         ApiService.removeHeader();
         ApiService.unmount401Interceptor();
     },
-
     sendResetEmail: async function (email) {
         const requestData = {
             method: 'post',
@@ -105,9 +86,11 @@ const UserService = {
             throw new AuthenticationError(error.response.status, error.response.data.detail)
         }
     },
-
     getPermissions: async function () {
-        return await ApiService.get('/api/v1/admin/get-perms');
+        return await ApiService.get('/api/v1/admin/me/get-perms');
+    },
+    getUserData: function () {
+        return ApiService.get('/api/v1/admin/me');
     }
 };
 

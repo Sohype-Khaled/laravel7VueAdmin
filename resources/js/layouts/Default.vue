@@ -1,15 +1,15 @@
 <template>
     <v-app>
-        <sidebar :logged-in="loggedIn" :open="sidebar"/>
+        <sidebar :logged-in="loggedIn"/>
 
         <v-app-bar v-if="loggedIn" clipped-left clipped-right app class="primary white--text">
-            <v-app-bar-nav-icon @click.stop="sidebar = !sidebar"/>
+            <v-app-bar-nav-icon color="white" @click.stop="toggleSidebar"/>
             <v-toolbar-title>Dashboard</v-toolbar-title>
             <v-spacer/>
             <v-menu bottom left close-on-click offset-y>
                 <template v-slot:activator="{ on }">
                     <v-btn icon v-on="on">
-                        <v-icon>settings</v-icon>
+                        <v-icon color="white">settings</v-icon>
                     </v-btn>
                 </template>
 
@@ -51,17 +51,11 @@
             </v-container>
         </v-content>
 
-        <v-snackbar
-            v-model="$store.state.snackbar.show"
-            :color="$store.state.snackbar.color"
-            bottom
-            left
-            :timeout="2000"
-        >
-            {{ $store.state.snackbar.message }}
-        </v-snackbar>
+        <snackbar/>
 
-        <v-footer absolute :inset="true" app>
+        <delete-dialog/>
+
+        <v-footer v-if="loggedIn" absolute :inset="true" app>
             <span class="px-4">&copy; {{ new Date().getFullYear() }}</span>
         </v-footer>
     </v-app>
@@ -70,22 +64,21 @@
 <script>
     import {mapGetters, mapActions} from "vuex";
     import Sidebar from "@/js/layouts/Sidebar";
+    import snackbar from "@/js/components/messages/snackbar";
+    import DeleteDialog from "@/js/components/messages/DeleteDialog";
 
     export default {
         name: "Default",
         components: {
-            Sidebar
+            Sidebar, snackbar, DeleteDialog
         },
-        data: () => ({
-            sidebar: true,
-            drawers: ['Default (no property)', 'Permanent', 'Temporary'],
-        }),
         computed: {
             ...mapGetters('auth', ['loggedIn']),
 
         },
         methods: {
-            ...mapActions('auth', ['logout'])
+            ...mapActions('auth', ['logout']),
+            ...mapActions("layout", ["toggleSidebar"])
         },
     }
 </script>

@@ -55,6 +55,9 @@ router.beforeEach((to, from, next) => {
     if (store.getters['acl/getPermissionsLength'] <= 0)
         store.dispatch('acl/fetchPermissions');
 
+    if (_.isEmpty(store.getters['acl/getUser']))
+        store.dispatch('acl/fetchUser');
+
     next();
 });
 
