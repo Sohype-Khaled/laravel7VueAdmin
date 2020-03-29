@@ -36,6 +36,18 @@
 
     export default {
         name: "edit",
+        beforeRouteEnter(to, from, next) {
+            next(vm => vm.getRoleInstance());
+        },
+        beforeRouteUpdate(to, from, next) {
+            this.role = {};
+            this.form = {
+                name: '',
+                permissions: [],
+                _method: 'PUT'
+            };
+            this.getRoleInstance().then(() => next())
+        },
         components: {
             ValidationProvider, ValidationObserver, permissions
         },
@@ -58,6 +70,12 @@
                     this.form.name = response.name;
                     this.form.permissions = _.map(response.permissions, permission => permission.name)
                 })
+            },
+            setRole(error, role) {
+                let response = role.data.data;
+                this.role = response;
+                this.form.name = response.name;
+                this.form.permissions = _.map(response.permissions, permission => permission.name)
             },
             submit() {
                 this.updateRole({id: this.role.id, value: this.form}).then(res => {
@@ -83,9 +101,6 @@
                 this.form.permissions = payload;
             })
         },
-        created() {
-            this.getRoleInstance()
-        }
     }
 </script>
 

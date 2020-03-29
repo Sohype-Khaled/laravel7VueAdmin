@@ -5,13 +5,12 @@ export default [
     {
         path: '/login',
         name: 'login',
+        component: Login,
         meta: {
             public: true,
-            onlyWhenLoggedOut: true
-        },
-        component: Login
+            onlyWhenLoggedOut: true,
+        }
     },
-
     {
         path: '/password/reset',
         name: 'passwordReset',

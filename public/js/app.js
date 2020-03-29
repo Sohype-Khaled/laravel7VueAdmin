@@ -2664,6 +2664,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "edit",
+  beforeRouteEnter: function beforeRouteEnter(to, from, next) {
+    next(function (vm) {
+      return vm.getRoleInstance();
+    });
+  },
+  beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
+    this.role = {};
+    this.form = {
+      name: '',
+      permissions: [],
+      _method: 'PUT'
+    };
+    this.getRoleInstance().then(function () {
+      return next();
+    });
+  },
   components: {
     ValidationProvider: vee_validate__WEBPACK_IMPORTED_MODULE_1__["ValidationProvider"],
     ValidationObserver: vee_validate__WEBPACK_IMPORTED_MODULE_1__["ValidationObserver"],
@@ -2690,6 +2706,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this.form.permissions = _.map(response.permissions, function (permission) {
           return permission.name;
         });
+      });
+    },
+    setRole: function setRole(error, role) {
+      var response = role.data.data;
+      this.role = response;
+      this.form.name = response.name;
+      this.form.permissions = _.map(response.permissions, function (permission) {
+        return permission.name;
       });
     },
     submit: function submit() {
@@ -2723,9 +2747,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     eventBus.$on('permissions:changed', function (payload) {
       _this3.form.permissions = payload;
     });
-  },
-  created: function created() {
-    this.getRoleInstance();
   }
 });
 
@@ -84270,8 +84291,6 @@ function checkPermissions(permissions) {
   return value;
 }
 
-;
-
 /***/ }),
 
 /***/ "./resources/js/helpers/FormHandlers.js":
@@ -85215,6 +85234,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_pages_ACL_create__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/js/pages/ACL/create */ "./resources/js/pages/ACL/create.vue");
 /* harmony import */ var _js_pages_ACL_edit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/js/pages/ACL/edit */ "./resources/js/pages/ACL/edit.vue");
 /* harmony import */ var _js_pages_ACL_details__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/js/pages/ACL/details */ "./resources/js/pages/ACL/details.vue");
+/* harmony import */ var _js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/js/routes/middleware/index */ "./resources/js/routes/middleware/index.js");
+
 
 
 
@@ -85226,19 +85247,35 @@ __webpack_require__.r(__webpack_exports__);
   children: [{
     path: '',
     name: 'acl',
-    component: _js_pages_ACL_listing__WEBPACK_IMPORTED_MODULE_1__["default"]
+    component: _js_pages_ACL_listing__WEBPACK_IMPORTED_MODULE_1__["default"],
+    meta: {
+      permission: 'roles.index',
+      middleware: [_js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__["default"].AuthMiddleware, _js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__["default"].ACLMiddleware, _js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__["default"].CanMiddleware]
+    }
   }, {
     path: 'create',
     name: 'acl.create',
-    component: _js_pages_ACL_create__WEBPACK_IMPORTED_MODULE_2__["default"]
+    component: _js_pages_ACL_create__WEBPACK_IMPORTED_MODULE_2__["default"],
+    meta: {
+      permission: 'roles.store',
+      middleware: [_js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__["default"].AuthMiddleware, _js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__["default"].ACLMiddleware, _js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__["default"].CanMiddleware]
+    }
   }, {
     path: ':id/edit',
     name: 'acl.edit',
-    component: _js_pages_ACL_edit__WEBPACK_IMPORTED_MODULE_3__["default"]
+    component: _js_pages_ACL_edit__WEBPACK_IMPORTED_MODULE_3__["default"],
+    meta: {
+      permission: 'roles.update',
+      middleware: [_js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__["default"].AuthMiddleware, _js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__["default"].ACLMiddleware, _js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__["default"].CanMiddleware]
+    }
   }, {
     path: ':id',
     name: 'acl.details',
-    component: _js_pages_ACL_details__WEBPACK_IMPORTED_MODULE_4__["default"]
+    component: _js_pages_ACL_details__WEBPACK_IMPORTED_MODULE_4__["default"],
+    meta: {
+      permission: 'roles.show',
+      middleware: [_js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__["default"].AuthMiddleware, _js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__["default"].ACLMiddleware, _js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_5__["default"].CanMiddleware]
+    }
   }]
 }]);
 
@@ -85255,6 +85292,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_pages_EmpRouterView__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/js/pages/EmpRouterView */ "./resources/js/pages/EmpRouterView.vue");
 /* harmony import */ var _js_pages_users_listing__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/js/pages/users/listing */ "./resources/js/pages/users/listing.vue");
+/* harmony import */ var _js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/js/routes/middleware/index */ "./resources/js/routes/middleware/index.js");
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ([{
@@ -85263,7 +85302,11 @@ __webpack_require__.r(__webpack_exports__);
   children: [{
     path: '',
     name: 'admins',
-    component: _js_pages_users_listing__WEBPACK_IMPORTED_MODULE_1__["default"]
+    component: _js_pages_users_listing__WEBPACK_IMPORTED_MODULE_1__["default"],
+    meta: {
+      permission: 'admins.index',
+      middleware: [_js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_2__["default"].AuthMiddleware, _js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_2__["default"].ACLMiddleware, _js_routes_middleware_index__WEBPACK_IMPORTED_MODULE_2__["default"].CanMiddleware]
+    }
   }]
 }]);
 
@@ -85285,11 +85328,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ([{
   path: '/login',
   name: 'login',
+  component: _js_pages_auth_Login__WEBPACK_IMPORTED_MODULE_0__["default"],
   meta: {
     "public": true,
     onlyWhenLoggedOut: true
-  },
-  component: _js_pages_auth_Login__WEBPACK_IMPORTED_MODULE_0__["default"]
+  }
 }, {
   path: '/password/reset',
   name: 'passwordReset',
@@ -85299,6 +85342,138 @@ __webpack_require__.r(__webpack_exports__);
   },
   component: _js_pages_auth_ResetPassword__WEBPACK_IMPORTED_MODULE_1__["default"]
 }]);
+
+/***/ }),
+
+/***/ "./resources/js/routes/middleware/ACLMiddleware.js":
+/*!*********************************************************!*\
+  !*** ./resources/js/routes/middleware/ACLMiddleware.js ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ACLMiddleware; });
+/* harmony import */ var _js_stores_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/js/stores/index */ "./resources/js/stores/index.js");
+
+function ACLMiddleware(_ref) {
+  var next = _ref.next;
+  if (_js_stores_index__WEBPACK_IMPORTED_MODULE_0__["default"].getters['acl/getPermissionsLength'] <= 0) _js_stores_index__WEBPACK_IMPORTED_MODULE_0__["default"].dispatch('acl/fetchPermissions');
+  if (_.isEmpty(_js_stores_index__WEBPACK_IMPORTED_MODULE_0__["default"].getters['acl/getUser'])) _js_stores_index__WEBPACK_IMPORTED_MODULE_0__["default"].dispatch('acl/fetchUser');
+  return next();
+}
+
+/***/ }),
+
+/***/ "./resources/js/routes/middleware/AuthMiddleware.js":
+/*!**********************************************************!*\
+  !*** ./resources/js/routes/middleware/AuthMiddleware.js ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return authMiddleware; });
+/* harmony import */ var _js_services_storage_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/js/services/storage.service */ "./resources/js/services/storage.service.js");
+
+function authMiddleware(_ref) {
+  var to = _ref.to,
+      next = _ref.next;
+  var isPublic = to.matched.some(function (record) {
+    return record.meta["public"];
+  });
+  var onlyWhenLoggedOut = to.matched.some(function (record) {
+    return record.meta.onlyWhenLoggedOut;
+  });
+  var loggedIn = !!_js_services_storage_service__WEBPACK_IMPORTED_MODULE_0__["TokenService"].getToken();
+
+  if (!isPublic && !loggedIn) {
+    return next({
+      path: '/login',
+      query: {
+        redirect: to.fullPath
+      }
+    });
+  }
+
+  if (loggedIn && onlyWhenLoggedOut) {
+    return next('/');
+  }
+
+  return next();
+}
+
+/***/ }),
+
+/***/ "./resources/js/routes/middleware/CanMiddleware.js":
+/*!*********************************************************!*\
+  !*** ./resources/js/routes/middleware/CanMiddleware.js ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CanMiddleware; });
+/* harmony import */ var _js_services_storage_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/js/services/storage.service */ "./resources/js/services/storage.service.js");
+
+function CanMiddleware(_ref) {
+  var to = _ref.to,
+      next = _ref.next;
+  var value = true,
+      permissions = Array.isArray(to.meta.permission) ? to.meta.permission : [to.meta.permission];
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = permissions[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var permission = _step.value;
+      value = value && _js_services_storage_service__WEBPACK_IMPORTED_MODULE_0__["ACLService"].getPermissions().indexOf(permission) !== -1;
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+        _iterator["return"]();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  if (!value) return next('/403');
+  return next();
+}
+
+/***/ }),
+
+/***/ "./resources/js/routes/middleware/index.js":
+/*!*************************************************!*\
+  !*** ./resources/js/routes/middleware/index.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _js_routes_middleware_AuthMiddleware__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/js/routes/middleware/AuthMiddleware */ "./resources/js/routes/middleware/AuthMiddleware.js");
+/* harmony import */ var _js_routes_middleware_ACLMiddleware__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/js/routes/middleware/ACLMiddleware */ "./resources/js/routes/middleware/ACLMiddleware.js");
+/* harmony import */ var _js_routes_middleware_CanMiddleware__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/js/routes/middleware/CanMiddleware */ "./resources/js/routes/middleware/CanMiddleware.js");
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  ACLMiddleware: _js_routes_middleware_ACLMiddleware__WEBPACK_IMPORTED_MODULE_1__["default"],
+  AuthMiddleware: _js_routes_middleware_AuthMiddleware__WEBPACK_IMPORTED_MODULE_0__["default"],
+  CanMiddleware: _js_routes_middleware_CanMiddleware__WEBPACK_IMPORTED_MODULE_2__["default"]
+});
 
 /***/ }),
 
@@ -85314,11 +85489,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
-/* harmony import */ var _js_stores_index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/js/stores/index */ "./resources/js/stores/index.js");
-/* harmony import */ var _js_services_storage_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/js/services/storage.service */ "./resources/js/services/storage.service.js");
-/* harmony import */ var _js_routes_ACLRoutes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/js/routes/ACLRoutes */ "./resources/js/routes/ACLRoutes.js");
-/* harmony import */ var _js_routes_AdminsRoutes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/js/routes/AdminsRoutes */ "./resources/js/routes/AdminsRoutes.js");
-/* harmony import */ var _js_routes_AuthRoutes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/js/routes/AuthRoutes */ "./resources/js/routes/AuthRoutes.js");
+/* harmony import */ var _js_routes_middleware_AuthMiddleware__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/js/routes/middleware/AuthMiddleware */ "./resources/js/routes/middleware/AuthMiddleware.js");
+/* harmony import */ var _js_routes_ACLRoutes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/js/routes/ACLRoutes */ "./resources/js/routes/ACLRoutes.js");
+/* harmony import */ var _js_routes_AdminsRoutes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/js/routes/AdminsRoutes */ "./resources/js/routes/AdminsRoutes.js");
+/* harmony import */ var _js_routes_AuthRoutes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/js/routes/AuthRoutes */ "./resources/js/routes/AuthRoutes.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -85333,51 +85513,65 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 
 
-
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   base: '/admin',
   mode: 'history',
-  routes: [].concat(_toConsumableArray(_js_routes_AuthRoutes__WEBPACK_IMPORTED_MODULE_6__["default"]), [{
+  routes: [].concat(_toConsumableArray(_js_routes_AuthRoutes__WEBPACK_IMPORTED_MODULE_5__["default"]), [{
     path: '/',
     name: 'home',
-    component: __webpack_require__(/*! @/js/pages/Home */ "./resources/js/pages/Home.vue")["default"]
-  }], _toConsumableArray(_js_routes_AdminsRoutes__WEBPACK_IMPORTED_MODULE_5__["default"]), _toConsumableArray(_js_routes_ACLRoutes__WEBPACK_IMPORTED_MODULE_4__["default"]), [{
+    component: __webpack_require__(/*! @/js/pages/Home */ "./resources/js/pages/Home.vue")["default"],
+    meta: {
+      middleware: [_js_routes_middleware_AuthMiddleware__WEBPACK_IMPORTED_MODULE_2__["default"]]
+    }
+  }], _toConsumableArray(_js_routes_AdminsRoutes__WEBPACK_IMPORTED_MODULE_4__["default"]), _toConsumableArray(_js_routes_ACLRoutes__WEBPACK_IMPORTED_MODULE_3__["default"]), [{
     path: '/unauthorized',
     name: '403',
-    component: __webpack_require__(/*! @/js/pages/404.vue */ "./resources/js/pages/404.vue")["default"]
+    component: __webpack_require__(/*! @/js/pages/404.vue */ "./resources/js/pages/404.vue")["default"],
+    meta: {
+      middleware: [_js_routes_middleware_AuthMiddleware__WEBPACK_IMPORTED_MODULE_2__["default"]]
+    }
   }, {
     path: '*',
     name: '404',
-    component: __webpack_require__(/*! @/js/pages/404.vue */ "./resources/js/pages/404.vue")["default"]
+    component: __webpack_require__(/*! @/js/pages/404.vue */ "./resources/js/pages/404.vue")["default"],
+    meta: {
+      middleware: [_js_routes_middleware_AuthMiddleware__WEBPACK_IMPORTED_MODULE_2__["default"]]
+    }
   }])
 });
-router.beforeEach(function (to, from, next) {
-  var isPublic = to.matched.some(function (record) {
-    return record.meta["public"];
-  });
-  var onlyWhenLoggedOut = to.matched.some(function (record) {
-    return record.meta.onlyWhenLoggedOut;
-  });
-  var loggedIn = !!_js_services_storage_service__WEBPACK_IMPORTED_MODULE_3__["TokenService"].getToken();
 
-  if (!isPublic && !loggedIn) {
-    return next({
-      path: '/login',
-      query: {
-        redirect: to.fullPath
-      } // Store the full path to redirect the user to after login
+function nextFactory(context, middleware, index) {
+  var subsequentMiddleware = middleware[index];
 
-    });
-  } // Do not allow user to visit login page or register page if they are logged in
-
-
-  if (loggedIn && onlyWhenLoggedOut) {
-    return next('/');
+  if (!subsequentMiddleware) {
+    return context.next;
   }
 
-  if (_js_stores_index__WEBPACK_IMPORTED_MODULE_2__["default"].getters['acl/getPermissionsLength'] <= 0) _js_stores_index__WEBPACK_IMPORTED_MODULE_2__["default"].dispatch('acl/fetchPermissions');
-  if (_.isEmpty(_js_stores_index__WEBPACK_IMPORTED_MODULE_2__["default"].getters['acl/getUser'])) _js_stores_index__WEBPACK_IMPORTED_MODULE_2__["default"].dispatch('acl/fetchUser');
+  return function () {
+    context.next.apply(context, arguments);
+    var nextMiddleware = nextFactory(context, middleware, index + 1);
+    subsequentMiddleware(_objectSpread({}, context, {
+      next: nextMiddleware
+    }));
+  };
+}
+
+router.beforeEach(function (to, from, next) {
+  if (to.meta.middleware) {
+    var middleware = Array.isArray(to.meta.middleware) ? to.meta.middleware : [to.meta.middleware],
+        context = {
+      from: from,
+      next: next,
+      router: router,
+      to: to
+    },
+        nextMiddleware = nextFactory(context, middleware, 1);
+    return middleware[0](_objectSpread({}, context, {
+      next: nextMiddleware
+    }));
+  }
+
   next();
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);

@@ -1,13 +1,23 @@
 #Laravel vue admin panel
 
-###Todo
+##Todo
 * [x] layout
 * [x] signin
 * [x] refresh token
-* [ ] theming
-* [ ] Profile Settings
 * [x] Acl
-* [ ] Messages
-* [ ] form
+* [X] Messages
 * [x] filters
-* [ ] translations
+* [ ] form
+
+=======
+* [X] Middleware
+* [ ] Profile Settings
+* [ ] fix pages and finish current pages
+
+* [ ] finish reset password 
+* [ ] setup pages module
+* [ ] setup translation module
+
+* [ ] setup backend filters
+* [ ] setup backend gallery
+* [ ] setup spatie activity logs

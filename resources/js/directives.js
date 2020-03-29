@@ -33,4 +33,4 @@ function checkPermissions(permissions, operator = 'and') {
         }
     }
     return value
-};
+}

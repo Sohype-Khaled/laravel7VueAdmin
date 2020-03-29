@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import store from '@/js/stores/index';
-import {TokenService} from '@/js/services/storage.service';
+import AuthMiddleware from "@/js/routes/middleware/AuthMiddleware";
+
 
 import ACLRoutes from "@/js/routes/ACLRoutes";
 import AdminsRoutes from "@/js/routes/AdminsRoutes";
@@ -17,47 +17,51 @@ const router = new Router({
         {
             path: '/',
             name: 'home',
-            component: require('@/js/pages/Home').default
+            component: require('@/js/pages/Home').default,
+            meta: {
+                middleware: [AuthMiddleware]
+            }
         },
         ...AdminsRoutes,
         ...ACLRoutes,
         {
             path: '/unauthorized',
             name: '403',
-            component: require('@/js/pages/404.vue').default
+            component: require('@/js/pages/404.vue').default,
+            meta: {
+                middleware: [AuthMiddleware]
+            }
         },
         {
             path: '*',
             name: '404',
-            component: require('@/js/pages/404.vue').default
+            component: require('@/js/pages/404.vue').default,
+            meta: {
+                middleware: [AuthMiddleware]
+            }
         },
     ]
 });
 
+function nextFactory(context, middleware, index) {
+    const subsequentMiddleware = middleware[index];
+    if (!subsequentMiddleware) {
+        return context.next;
+    }
+    return (...parameters) => {
+        context.next(...parameters);
+        const nextMiddleware = nextFactory(context, middleware, index + 1);
+        subsequentMiddleware({...context, next: nextMiddleware})
+    }
+}
 
 router.beforeEach((to, from, next) => {
-    const isPublic = to.matched.some(record => record.meta.public);
-    const onlyWhenLoggedOut = to.matched.some(record => record.meta.onlyWhenLoggedOut);
-    const loggedIn = !!TokenService.getToken();
-
-    if (!isPublic && !loggedIn) {
-        return next({
-            path:'/login',
-            query: {redirect: to.fullPath}  // Store the full path to redirect the user to after login
-        });
+    if (to.meta.middleware) {
+        const middleware = Array.isArray(to.meta.middleware) ? to.meta.middleware : [to.meta.middleware],
+            context = {from, next, router, to},
+            nextMiddleware = nextFactory(context, middleware, 1);
+        return  middleware[0]({...context, next: nextMiddleware})
     }
-
-    // Do not allow user to visit login page or register page if they are logged in
-    if (loggedIn && onlyWhenLoggedOut) {
-        return next('/')
-    }
-
-    if (store.getters['acl/getPermissionsLength'] <= 0)
-        store.dispatch('acl/fetchPermissions');
-
-    if (_.isEmpty(store.getters['acl/getUser']))
-        store.dispatch('acl/fetchUser');
-
     next();
 });
 
