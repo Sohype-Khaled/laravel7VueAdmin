@@ -17,9 +17,12 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "spatie/laravel-activitylog": "^3.14",
-        "spatie/laravel-permission": "^3.11"
+        "spatie/laravel-medialibrary": "^7.0.0",
+        "spatie/laravel-permission": "^3.11",
+        "spatie/laravel-query-builder": "^2.8"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.6",
         "facade/ignition": "^2.0",
         "fzaninotto/faker": "^1.9.1",
         "mockery/mockery": "^1.3.1",

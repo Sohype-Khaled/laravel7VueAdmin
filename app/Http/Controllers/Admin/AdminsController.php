@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminResource;
 use App\User;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class AdminsController extends Controller
 {
@@ -16,6 +17,8 @@ class AdminsController extends Controller
 
     public function index(Request $request)
     {
+//        QueryBuilder::for(User::class)->allowedFilters(['id','name','email',])->get();
+
         $admins = new User;
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -32,6 +35,7 @@ class AdminsController extends Controller
             }
         }
         $admins = $admins->paginate($request->input('per_page') ?? 10);
+
         return AdminResource::collection($admins);
     }
 
@@ -56,7 +60,11 @@ class AdminsController extends Controller
 
     public function destroy(User $admin)
     {
-        $deleted = $admin->delete();
+        try {
+            $admin->delete();
+        } catch (\Exception $e) {
+        }
+
         return response()->json(['msg' => 'User deleted successfully'], 200);
     }
 }
