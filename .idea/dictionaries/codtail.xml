@@ -2,6 +2,7 @@
   <dictionary name="codtail">
     <words>
       <w>axios</w>
+      <w>descr</w>
     </words>
   </dictionary>
 </component>

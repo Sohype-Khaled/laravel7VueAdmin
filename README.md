@@ -15,7 +15,8 @@
 * [ ] fix pages and finish current pages
 
 * [ ] finish reset password 
-* [ ] setup pages module
+* [X] setup pages module
+
 * [ ] setup translation module
 
 * [X] setup backend filters

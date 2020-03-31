@@ -4,7 +4,7 @@
 //});
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome')->with('pages', \App\Pages::all());
 });
 
 Auth::routes();
