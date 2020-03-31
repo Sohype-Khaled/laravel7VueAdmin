@@ -21,4 +21,4 @@
 
 * [ ] setup backend filters
 * [ ] setup backend gallery
-* [ ] setup spatie activity logs
+* [X] setup spatie activity logs
