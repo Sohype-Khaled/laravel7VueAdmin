@@ -8,4 +8,4 @@ Route::group(['prefix' => 'me'], function () {
 
 Route::apiResource('roles', 'RolesController');
 Route::apiResource('admins', 'AdminsController');
-Route::get('activities', 'ActivitiesController');
+Route::get('activities', 'ActivitiesController')->name('activities');

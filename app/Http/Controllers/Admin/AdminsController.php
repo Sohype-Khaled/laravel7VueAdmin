@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminResource;
 use App\User;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class AdminsController extends Controller
@@ -17,24 +18,11 @@ class AdminsController extends Controller
 
     public function index(Request $request)
     {
-//        QueryBuilder::for(User::class)->allowedFilters(['id','name','email',])->get();
-
-        $admins = new User;
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $admins = $admins->where('id', 'LIKE', "%$search%")
-                ->orWhere('name', 'LIKE', "%$search%")
-                ->orWhere('email', 'LIKE', "%$search%")
-                ->orWhere('id', 'LIKE', "%$search%");
-        }
-        if ($request->has('sort')) {
-            foreach ($request->input('sort') as $sortable) {
-                $order = strpos($sortable, '-') === 0 ? 'desc' : 'asc';
-                $prop = str_replace('-', '', $sortable);
-                $admins = $admins->orderBy($prop, $order);
-            }
-        }
-        $admins = $admins->paginate($request->input('per_page') ?? 10);
+        $admins = QueryBuilder::for(User::class)
+            ->allowedFilters([AllowedFilter::exact('id'), 'name', 'email',])
+            ->allowedSorts('id', 'name', 'email')
+            ->paginate($request->perPage)
+            ->appends(request()->query());
 
         return AdminResource::collection($admins);
     }

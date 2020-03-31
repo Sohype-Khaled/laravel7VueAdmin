@@ -18,6 +18,6 @@
 * [ ] setup pages module
 * [ ] setup translation module
 
-* [ ] setup backend filters
+* [X] setup backend filters
 * [ ] setup backend gallery
 * [X] setup spatie activity logs
