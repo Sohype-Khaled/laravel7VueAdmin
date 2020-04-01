@@ -1,9 +1,11 @@
 <?php
 
 
-Route::group(['prefix' => 'me'], function () {
-    Route::get('get-perms', 'ProfileController@getRolesAndPermissions');
-    Route::get('', 'ProfileController@profile');
+Route::name('profile.')->prefix('me')->group(function () {
+    Route::get('get-perms', 'ProfileController@getRolesAndPermissions')->name('permission.get');
+    Route::get('profile', 'ProfileController@profile')->name('profile');
+    Route::put('{user}','ProfileController@updateData')->name('update');
+    Route::patch('update_password','ProfileController@updatePassword')->name('password.update');
 });
 Route::put('pages/{page}/translate', 'PagesController@translate');
 Route::apiResource('pages', 'PagesController');
